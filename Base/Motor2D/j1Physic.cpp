@@ -58,7 +58,7 @@ bool j1Physics::Start()
 	//physbody_s->module = App->scene;
 	//b->SetUserData(physbody_s);
 
-
+	CreateCircle(x, y, diameter * 0.5f, b2_staticBody);
 
 
 
@@ -101,10 +101,10 @@ bool j1Physics::PreUpdate()
 	return true;
 }
 
-PhysBody* j1Physics::CreateCircle(int x, int y, int radius)
+PhysBody* j1Physics::CreateCircle(int x, int y, int radius,b2BodyType body_type )
 {
 	b2BodyDef body;
-	body.type = b2_dynamicBody;
+	body.type = body_type;
 	body.position.Set(PIXEL_TO_METERS(x), PIXEL_TO_METERS(y));
 
 	b2Body* b = world->CreateBody(&body);
