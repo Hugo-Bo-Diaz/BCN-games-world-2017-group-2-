@@ -198,39 +198,6 @@ bool j1Map::LoadMapData(const pugi::xml_node& map_node, Map_info& item_map) {
 	item_map.tileheight = map_node.attribute("tileheight").as_uint();
 	item_map.nextobjectid = map_node.attribute("nextobjectid").as_uint();
 
-	// Load Tilesets
-	/*
-	if (map_node->child("tileset").attribute("firstgid").as_uint() != 0) {
-	
-		pugi::xml_node tileset_node = map_node->child("tileset");
-
-		while (tileset_node.attribute("firstgid").as_int() > 0) {
-
-			tileset_info* item_tileset = new tileset_info;
-			LoadTilesetData(&tileset_node, item_tileset);
-			tileset_node = tileset_node.parent().next_sibling("tileset");
-			item_map->tilesets.add(item_tileset);
-		}
-
-		map_loaded = true;
-	}
-	else {
-		map_loaded = false;
-		LOG("There is no tileset!/n");
-	}
-
-	// Load Layers
-	if (map_loaded) {
-		pugi::xml_node layer_node = map_node->child("layer");
-
-		while (layer_node.attribute("name").as_string() != "") {
-			layer_info* item_layer = new layer_info;
-			LoadLayerData(&layer_node, item_layer);
-			layer_node = layer_node.next_sibling("layer");
-			item_map->layers.add(item_layer);
-		}
-	}*/
-
 	return ret;
 }
 
@@ -282,6 +249,7 @@ bool j1Map::LoadTerrainData(const pugi::xml_node& tileset_node, const int& id, t
 	// Or do with string and cmp (more memory tho)
 	// switch(
 	//pugi::xpath_node_set terrain_node = tileset_node.select_node("/tile[@id='%d']", id); Test the select node method to load a specific node instead of iterating to find
+
 	return true;
 }
 
