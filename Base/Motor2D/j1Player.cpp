@@ -8,7 +8,6 @@
 #include "j1Collision.h"
 #include "j1FadeToBlack.h"
 #include "j1Player.h"
-#include "j1Fonts.h"
 #include "j1Audio.h"
 #include "j1Enemies.h"
 #include "SDL/include/SDL_timer.h"
@@ -43,7 +42,6 @@ bool j1Player::Start()
 	
 	audio_shot = App->audio->LoadFx("gunsmoke/shotfx.wav");
 
-	font_score = App->fonts->Load("fonts/font.png", "0123456789abcdefghijklmnopqrstuvwxyz", 1);
 	col = App->collision->AddCollider({(int)position.x, (int)position.y, 19, 28}, COLLIDER_PLAYER, this);
 
 	return true;
@@ -72,8 +70,6 @@ bool j1Player::Update()
 	joystick_left = 0;
 	joystick_right = 0;
 
-
-
 		if (App->input->controller_1.left_joystick.x > 0.25)
 		{
 			joystick_right = 1;
@@ -95,18 +91,23 @@ bool j1Player::Update()
 			joystick_up = 1;
 		}
 
+		if (App->input->controller_1.right_joystick.x != 0 && App->input->controller_1.right_joystick.y != 0)
+		{
+			//calculate angle
+			joystick_angle = atan2(App->input->controller_1.right_joystick.y, App->input->controller_1.right_joystick.x);
+		}
 
-		if ((App->input->GetKey[SDL_SCANCODE_W] == KEY_REPEAT || joystick_up || App->input->controller_1.w_button))
+		if (App->input->GetKey[SDL_SCANCODE_W] == KEY_DOWN || joystick_up || App->input->controller_1.jump)
 		{
 			position.y -= speed;
 		}
 
-		if ((App->input->GetKey[SDL_SCANCODE_S] == KEY_REPEAT || joystick_down || App->input->controller_1.s_button))
+		if (App->input->GetKey[SDL_SCANCODE_S] == KEY_REPEAT || joystick_down)
 		{
 			position.y += speed;
 		}
 
-		if ((App->input->GetKey[SDL_SCANCODE_D] == KEY_REPEAT || joystick_right || App->input->controller_1.d_button))
+		if (App->input->GetKey[SDL_SCANCODE_D] == KEY_REPEAT || joystick_right)
 		{
 			position.x += speed;
 			if (current_animation != &right)
@@ -117,7 +118,7 @@ bool j1Player::Update()
 
 		}
 
-		if ((App->input->GetKey[SDL_SCANCODE_A] == KEY_REPEAT || joystick_left || App->input->controller_1.a_button))
+		if (App->input->GetKey[SDL_SCANCODE_A] == KEY_REPEAT || joystick_left)
 		{
 			position.x -= speed;
 			if (current_animation != &left)
@@ -155,7 +156,6 @@ bool j1Player::Update()
 	// Draw everything --------------------------------------
 	
 	sprintf_s(scores, 8, "%7d", score);
-	App->fonts->BlitText(8,8,font_score,scores);
 
 	if(destroyed == false)
 		App->render->Blit(graphics, (int)position.x, (int)position.y, &(current_animation->GetCurrentFrame()));

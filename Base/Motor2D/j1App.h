@@ -23,7 +23,7 @@ class j1Map;
 class j1Player;
 class j1Enemies;
 class j1FadeToBlack;
-
+class j1Particles;
 class j1App
 {
 public:
@@ -108,7 +108,7 @@ public:
 	j1Player*			player;
 	j1Enemies*			enemies;
 	j1FadeToBlack*		fade;
-
+	j1Particles*		particles;
 
 private:
 

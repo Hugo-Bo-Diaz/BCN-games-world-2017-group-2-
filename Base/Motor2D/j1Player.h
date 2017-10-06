@@ -36,6 +36,13 @@ public:
 	SDL_Texture* sprites = nullptr;
 	Animation* current_animation = nullptr;
 
+	Animation idle;
+	Animation left;
+	Animation right;
+	Animation special_1;
+	Animation special_2;
+	Animation special_3;
+
 	fPoint position;
 
 	Collider* col;
@@ -53,6 +60,8 @@ public:
 	bool joystick_down;
 	bool joystick_left;
 	bool joystick_right;
+
+	float joystick_angle;
 
 	bool death = false;
 

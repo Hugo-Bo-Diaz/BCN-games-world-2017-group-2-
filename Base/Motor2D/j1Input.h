@@ -2,7 +2,7 @@
 #define __j1INPUT_H__
 
 #include "j1Module.h"
-
+#include "p2Point.h"
 #define NUM_KEYS 352
 #define NUM_MOUSE_BUTTONS 5
 #define LAST_KEYS_PRESSED_BUFFER 50
@@ -12,17 +12,13 @@ struct SDL_Rect;
 struct GamePad {
 	p2Point<float> left_joystick;
 	p2Point<float> right_joystick;
-	bool z_button;
-	bool x2_button;
-	bool x_button;
-	bool c_button;
-	bool esc_button;
-	bool space_button;
-	bool w_button;
-	bool a_button;
-	bool s_button;
-	bool d_button;
-
+	bool change_character;
+	bool slam_big;
+	bool jump;
+	bool anchor_big;
+	bool grab_big;
+	bool whip_small;
+	bool slide_small;
 };
 
 enum j1EventWindow
