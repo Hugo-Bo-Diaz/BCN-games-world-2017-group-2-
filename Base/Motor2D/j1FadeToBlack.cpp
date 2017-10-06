@@ -9,7 +9,7 @@
 
 j1FadeToBlack::j1FadeToBlack()
 {
-	screen = { 0, 0, App->win->width * App->win->scale, App->win->height * App->win->scale };
+	screen = { 0, 0, 1920, 1080 };
 }
 
 j1FadeToBlack::~j1FadeToBlack()

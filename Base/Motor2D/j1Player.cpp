@@ -3,13 +3,11 @@
 #include "j1App.h"
 #include "j1Textures.h"
 #include "j1Input.h"
-#include "j1Particles.h"
 #include "j1Render.h"
 //#include "j1Collision.h"
 #include "j1FadeToBlack.h"
 #include "j1Player.h"
 #include "j1Audio.h"
-#include "j1Enemies.h"
 #include "SDL/include/SDL_timer.h"
 
 #include<stdio.h>
@@ -34,7 +32,7 @@ bool j1Player::Start()
 {
 	LOG("Loading player");
 
-	graphics = App->tex->Load("LOAD ME HERE.png");
+	graphics = App->tex->Load("textures/test.png");
 
 	destroyed = false;
 	position.x = 0;//READ HERE FROM XML
@@ -142,92 +140,21 @@ bool j1Player::Update()
 			current_animation = &idle;
 		}
 
-		//col->rect = { (int)position.x + god_mode * 250, (int)position.y, 19, 28 };
-
-	
-
-	/*else if (SDL_GetTicks() > death_time && death_time != -1 && destroyed == false)
-	{
-
-		horse_jump = false;
-	}*/
 
 
 	// Draw everything --------------------------------------
 	
-	sprintf_s(scores, 8, "%7d", score);
-
-	if(destroyed == false)
-		App->render->Blit(graphics, (int)position.x, (int)position.y, &(current_animation->GetCurrentFrame()));
-
+		App->render->Blit(sprites, position.x, position.y);
 	//Draw HUD(lifes / powerups)---------------------------------
 
-	if (App->input->GetKey(SDL_SCANCODE_G) == KEY_DOWN)
-	{
-		switch (god_mode)
-		{
-		case 0:
-		{god_mode = 1;
-		break;
-		}
+	
 
-		case 1:
-		{
-			god_mode = 0;
-			break;
-		}
-		}
+	return true;
+
 	}
-
-
-//	death_time = SDL_GetTicks();
-
-	/*if (lifes != 0)
-	{
-		App->fade->FadeToBlack((j1Module*)App->scene_space, (j1Module*)App->scene_transit, 0.3f);
-		//death = false;
-	}
-	else
-	{
-		lifes = 3;
-		LOG("OUT OF LIFES");
-		App->fade->FadeToBlack((j1Module*)App->scene_space, (j1Module*)App->scene_gameover);
-		//death = false;
-	}*/
-
-
-if (App->input->GetKey(SDL_SCANCODE_N) == KEY_REPEAT&& App->fade->IsFading() == false)
-{
-	//App->fade->FadeToBlack((j1Module*)App->scene_space, (j1Module*)App->scene_gameover);
-}
-if (App->input->GetKey(SDL_SCANCODE_M) == KEY_REPEAT && destroyed == false && App->fade->IsFading() == false)
-{
-	lifes -= 1;
-//	App->particles->AddParticle(App->particles->player_death, position.x, position.y, COLLIDER_NONE);
-	destroyed = true;
-}
-
-return true;
-
-}
 
 void j1Player::OnCollision(Collider* c1, Collider* c2)
 {
-	//death_time = SDL_GetTicks();
-	/*if (c1 == col && c2->type == COLLIDER_ENEMY_SHOT
-		 && App->fade->IsFading() == false)
-	{
-			lifes -= 1;
-
-			if (destroyed == false)
-			{
-				App->particles->AddParticle(App->particles->player_death, position.x, position.y, COLLIDER_NONE);
-				//death_time = -1;
-			}
-
-			else death = false;
-			destroyed = true;
-	}*/
 
 }
 

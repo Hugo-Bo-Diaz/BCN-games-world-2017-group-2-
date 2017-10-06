@@ -3,6 +3,8 @@
 
 #include "j1Module.h"
 #include "p2Point.h"
+#include "SDL/include/SDL_gamecontroller.h"
+
 #define NUM_KEYS 352
 #define NUM_MOUSE_BUTTONS 5
 #define LAST_KEYS_PRESSED_BUFFER 50

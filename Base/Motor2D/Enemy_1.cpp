@@ -42,17 +42,9 @@ int Enemy_1::value_between(int min, int max)
 
 void Enemy_1::Move()
 {
-	/*col->SetPos(position.x, position.y + 17);
-	if (collider != nullptr)
-		collider->SetPos(position.x, position.y);*/
 
 }
 Enemy_1::~Enemy_1()
 {
-	if (App->player->destroyed == false && hit == true)
-	{
-		App->player->score += 200;
-		App->enemies->Playsound(1);
-	}
-	//App->particles->AddParticle(App->particles->cookiedeath, position.x, position.y, COLLIDER_NONE);
+	
 }

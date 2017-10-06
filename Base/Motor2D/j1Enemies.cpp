@@ -88,7 +88,7 @@ bool j1Enemies::Update()
 bool j1Enemies::PostUpdate()
 {
 	// check camera position to decide what to de-spawn
-	for(uint i = 0; i < MAX_ENEMIES; ++i)
+	/*for(uint i = 0; i < MAX_ENEMIES; ++i)
 	{
 		if(enemies[i] != nullptr)
 		{
@@ -100,7 +100,7 @@ bool j1Enemies::PostUpdate()
 				enemies[i] = nullptr;
 			}
 		}
-	}
+	}*/
 
 	return true;
 }
