@@ -1,30 +1,16 @@
 #ifndef __ModuleEnemies_H__
 #define __ModuleEnemies_H__
 
-#include "Module.h"
-#include "Enemy_RedBird.h"
-#include "Enemy_BrownCookie.h"
+#include "j1Module.h"
+#include "Enemy_1.h"
+
 
 #define MAX_ENEMIES 100
-
-// TODO 2: Add a new enemy: Brown Cookies!
-
-// TODO 3: Have the Brown Cookies describe a path in the screen
-
-// TODO 4: Create a new enemy type: the Mech
 
 enum ENEMY_TYPES
 {
 	NO_TYPE,
-	REDBIRD,
-	BROWNCOOKIE,
-	COOKIENINJA,
-	COOKIEBOSS,
-	MECHBOSS,
-	MECH,
-	RIFLE,
-	STABBY,
-	BOSS
+	FIRST
 };
 
 class Enemy;
@@ -35,17 +21,17 @@ struct EnemyInfo
 	int x, y;
 };
 
-class ModuleEnemies : public Module
+class j1Enemies : public j1Module
 {
 public:
 
-	ModuleEnemies();
-	~ModuleEnemies();
+	j1Enemies();
+	~j1Enemies();
 
 	bool Start();
-	update_status PreUpdate();
-	update_status Update();
-	update_status PostUpdate();
+	bool PreUpdate();
+	bool Update();
+	bool PostUpdate();
 	bool CleanUp();
 	void OnCollision(Collider* c1, Collider* c2);
 

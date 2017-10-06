@@ -1,9 +1,9 @@
-#include "Application.h"
+#include "j1App.h"
 #include "Enemy.h"
-#include "ModuleCollision.h"
-#include "ModuleParticles.h"
-#include "ModuleRender.h"
-#include "ModulePlayer.h"
+#include "j1Collision.h"
+#include "j1Particles.h"
+#include "j1Render.h"
+#include "j1Player.h"
 
 Enemy::Enemy(int x, int y) : position(x, y)
 {

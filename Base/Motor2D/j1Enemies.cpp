@@ -1,57 +1,41 @@
-#include "Application.h"
-#include "ModuleInput.h"
-#include "ModuleRender.h"
-#include "ModuleEnemies.h"
-#include "ModuleParticles.h"
-#include "ModuleTextures.h"
-#include "ModuleAudio.h"
-#include "ModulePlayer.h"
-#include "ModuleFadeToBlack.h"
+#include "P2Defs.h"
+#include "P2Log.h"
+#include "j1App.h"
+#include "j1Input.h"
+#include "j1Render.h"
+#include "j1Enemies.h"
+#include "j1Particles.h"
+#include "j1Textures.h"
+#include "j1Audio.h"
+#include "j1Player.h"
+#include "j1FadeToBlack.h"
 #include "Enemy.h"
-#include "Enemy_RedBird.h"
-#include "Enemy_BrownCookie.h"
-#include "Enemy_CookieNinja.h"
-#include "Enemy_CookieBoss.h"
-#include "Enemy_MechBoss.h"
-#include "Enemy_Mech.h"
-#include "Enemy_Rifle.h"
-#include "Enemy_Boss.h"
-#include "Enemy_Stabby.h"
+#include "Enemy_1.h"
 
 #define SPAWN_MARGIN 650
 
-ModuleEnemies::ModuleEnemies()
+j1Enemies::j1Enemies()
 {
-	section.x = 0;
-	section.h = 8;
-	section.w = 22;
-	section.y = 0;
-
 	for(uint i = 0; i < MAX_ENEMIES; ++i)
 		enemies[i] = nullptr;
 }
 
 // Destructor
-ModuleEnemies::~ModuleEnemies()
+j1Enemies::~j1Enemies()
 {
 }
 
-bool ModuleEnemies::Start()
+bool j1Enemies::Start()
 {
 	// Create a prototype for each enemy available so we can copy them around
-	sprites = App->textures->Load("gunsmoke/enemies.png");
+	sprites = App->tex->Load("gunsmoke/enemies.png");
 	sounds[0] = App->audio->LoadFx("gunsmoke/bomber_rifleman_death.wav");
 	sounds[1] = App->audio->LoadFx("gunsmoke/bandit_sniper_death.wav");
-	boss_alive = false;
-	section.x = 181;
-	section.y = 165;
-	section.w = 22;
-	section.h = 8;
-
+	
 	return true;
 }
 
-update_status ModuleEnemies::PreUpdate()
+bool j1Enemies::PreUpdate()
 {
 	// check camera position to decide what to spawn
 	for(uint i = 0; i < MAX_ENEMIES; ++i)
@@ -67,11 +51,11 @@ update_status ModuleEnemies::PreUpdate()
 		}
 	}
 
-	return UPDATE_CONTINUE;
+	return true;
 }
 
 // Called before render is available
-update_status ModuleEnemies::Update()
+bool j1Enemies::Update()
 {
 	for(uint i = 0; i < MAX_ENEMIES; ++i)
 		if (enemies[i] != nullptr) 
@@ -97,16 +81,10 @@ update_status ModuleEnemies::Update()
 		}
 	}
 
-	if (SDL_GetTicks() > App->player->death_time && App->player->death_time != -1 && App->player->destroyed == false)
-	{ 
-		App->fade->FadeToBlack((Module*)App->scene_space, (Module*)App->scene_gameover);
-		App->player->death_time = -1;
-	}
-
-	return UPDATE_CONTINUE;
+	return true;
 }
 
-update_status ModuleEnemies::PostUpdate()
+bool j1Enemies::PostUpdate()
 {
 	// check camera position to decide what to de-spawn
 	for(uint i = 0; i < MAX_ENEMIES; ++i)
@@ -123,15 +101,15 @@ update_status ModuleEnemies::PostUpdate()
 		}
 	}
 
-	return UPDATE_CONTINUE;
+	return true;
 }
 
 // Called before quitting
-bool ModuleEnemies::CleanUp()
+bool j1Enemies::CleanUp()
 {
 	LOG("Freeing all enemies");
 
-	App->textures->Unload(sprites);
+	App->tex->Unload(sprites);
 	App->audio->UnLoadFx(sounds[0]);
 	App->audio->UnLoadFx(sounds[1]);
 
@@ -158,7 +136,7 @@ bool ModuleEnemies::CleanUp()
 	return true;
 }
 
-bool ModuleEnemies::AddEnemy(ENEMY_TYPES type, int x, int y)
+bool j1Enemies::AddEnemy(ENEMY_TYPES type, int x, int y)
 {
 	bool ret = false;
 
@@ -177,7 +155,7 @@ bool ModuleEnemies::AddEnemy(ENEMY_TYPES type, int x, int y)
 	return ret;
 }
 
-void ModuleEnemies::SpawnEnemy(const EnemyInfo& info)
+void j1Enemies::SpawnEnemy(const EnemyInfo& info)
 {
 	// find room for the new enemy
 	uint i = 0;
@@ -187,47 +165,14 @@ void ModuleEnemies::SpawnEnemy(const EnemyInfo& info)
 	{
 		switch(info.type)
 		{
-			case ENEMY_TYPES::REDBIRD:
-			enemies[i] = new Enemy_RedBird(info.x,info.y);
+			case ENEMY_TYPES::FIRST:
+			enemies[i] = new Enemy_1(info.x,info.y);
 			break;
-
-			case ENEMY_TYPES::BROWNCOOKIE:
-			enemies[i] = new Enemy_BrownCookie(info.x, info.y);
-			break;
-
-			case ENEMY_TYPES::COOKIENINJA:
-			enemies[i] = new Enemy_CookieNinja(info.x, info.y);
-			break;
-
-			case ENEMY_TYPES::MECH:
-			enemies[i] = new Enemy_Mech(info.x, info.y);
-			break;
-
-			case ENEMY_TYPES::RIFLE:
-			enemies[i] = new Enemy_Rifle(info.x, info.y);
-			break;
-
-			case ENEMY_TYPES::BOSS:
-			enemies[i] = new Enemy_Boss(info.x, info.y);
-			break;
-
-			case ENEMY_TYPES::COOKIEBOSS:
-			enemies[i] = new Enemy_CookieBoss(info.x, info.y);
-			break;
-
-			case ENEMY_TYPES::MECHBOSS:
-			enemies[i] = new Enemy_MechBoss(info.x, info.y);
-			break;
-
-			case ENEMY_TYPES::STABBY:
-			enemies[i] = new Enemy_Stabby(info.x, info.y);
-			break;
-
 		}
 	}
 }
 
-void ModuleEnemies::OnCollision(Collider* c1, Collider* c2)
+void j1Enemies::OnCollision(Collider* c1, Collider* c2)
 {
 	for(uint i = 0; i < MAX_ENEMIES; ++i)
 	{
@@ -249,7 +194,7 @@ void ModuleEnemies::OnCollision(Collider* c1, Collider* c2)
 	}
 }
 
-int ModuleEnemies::OnScreenEnemies()
+int j1Enemies::OnScreenEnemies()
 {
 	int ret = 0;
 	for (uint i = 0; i < MAX_ENEMIES; ++i)
@@ -262,7 +207,7 @@ int ModuleEnemies::OnScreenEnemies()
 	return ret;
 }
 
-void ModuleEnemies::Playsound(int sound)
+void j1Enemies::Playsound(int sound)
 {
 	App->audio->PlayFx(sounds[sound]);
 }

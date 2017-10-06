@@ -76,6 +76,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Enemy.cpp" />
+    <ClCompile Include="Enemy_1.cpp" />
+    <ClCompile Include="j1Enemies.cpp" />
     <ClCompile Include="j1Main.cpp" />
     <ClCompile Include="j1App.cpp" />
     <ClCompile Include="j1Audio.cpp" />
@@ -91,6 +94,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animation.h" />
+    <ClInclude Include="Enemy.h" />
+    <ClInclude Include="Enemy_1.h" />
+    <ClInclude Include="j1Enemies.h" />
     <ClInclude Include="j1Map.h" />
     <ClInclude Include="j1Player.h" />
     <ClInclude Include="j1Scene.h" />

@@ -37,6 +37,15 @@
     <ClCompile Include="j1Player.cpp">
       <Filter>Desenvolupament  ========\Modules</Filter>
     </ClCompile>
+    <ClCompile Include="j1Enemies.cpp">
+      <Filter>Desenvolupament  ========\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="Enemy.cpp">
+      <Filter>Desenvolupament  ========\Modules\enemies</Filter>
+    </ClCompile>
+    <ClCompile Include="Enemy_1.cpp">
+      <Filter>Desenvolupament  ========\Modules\enemies</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="j1Window.h">
@@ -99,6 +108,15 @@
     <ClInclude Include="Animation.h">
       <Filter>Desenvolupament  ========</Filter>
     </ClInclude>
+    <ClInclude Include="j1Enemies.h">
+      <Filter>Desenvolupament  ========\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="Enemy.h">
+      <Filter>Desenvolupament  ========\Modules\enemies</Filter>
+    </ClInclude>
+    <ClInclude Include="Enemy_1.h">
+      <Filter>Desenvolupament  ========\Modules\enemies</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Programacio 2 ===========">
@@ -121,6 +139,9 @@
     </Filter>
     <Filter Include="Desenvolupament  ========\XMLs">
       <UniqueIdentifier>{65dc61b7-7c34-4c06-bb19-5eb8caff4ec9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Desenvolupament  ========\Modules\enemies">
+      <UniqueIdentifier>{99ee96ed-0f0e-4fbf-bc9a-c98e14f7a7c3}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
