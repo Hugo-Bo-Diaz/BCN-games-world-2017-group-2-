@@ -2,6 +2,7 @@
 #define __j1SCENE_H__
 
 #include "j1Module.h"
+#include "j1Physic.h"
 
 struct SDL_Texture;
 
@@ -31,6 +32,8 @@ public:
 
 	// Called before quitting
 	bool CleanUp();
+
+	void OnCollision(PhysBody* bodyA, PhysBody* bodyB);
 
 private:
 	SDL_Texture* img;

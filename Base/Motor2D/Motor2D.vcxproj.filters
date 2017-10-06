@@ -38,6 +38,7 @@
       <Filter>Desenvolupament  ========\Modules</Filter>
     </ClCompile>
     <ClCompile Include="j1FadeToBlack.cpp">
+    <ClCompile Include="j1Physic.cpp">
       <Filter>Desenvolupament  ========\Modules</Filter>
     </ClCompile>
   </ItemGroup>
@@ -96,6 +97,7 @@
     <ClInclude Include="p2Vec3.h">
       <Filter>Programacio 2 ===========</Filter>
     </ClInclude>
+
     <ClInclude Include="j1Player.h">
       <Filter>Desenvolupament  ========\Modules</Filter>
     </ClInclude>
@@ -103,6 +105,7 @@
       <Filter>Desenvolupament  ========</Filter>
     </ClInclude>
     <ClInclude Include="j1FadeToBlack.h">
+    <ClInclude Include="j1Physic.h">
       <Filter>Desenvolupament  ========\Modules</Filter>
     </ClInclude>
   </ItemGroup>

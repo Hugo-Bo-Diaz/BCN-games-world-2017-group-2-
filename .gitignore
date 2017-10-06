@@ -48,6 +48,8 @@ project.fragment.lock.json
 artifacts/
 **/Properties/launchSettings.json
 
+!BCN-games-world-2017-group-2-\Base\Motor2D\Box2D\libx86
+
 *_i.c
 *_p.c
 *_i.h
