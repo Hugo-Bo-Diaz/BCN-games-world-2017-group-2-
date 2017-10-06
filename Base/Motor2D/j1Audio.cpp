@@ -199,6 +199,7 @@ bool j1Audio::Save(pugi::xml_node* savegame) {
 	bool ret = true;
 	
 	//Save Master Volume
+	//savegame->append_child("master_volume");
 	savegame->append_child("master_volume");
 	savegame->child("master_volume").append_attribute("value") = master_volume;
 	

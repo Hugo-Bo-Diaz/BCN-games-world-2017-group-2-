@@ -134,8 +134,6 @@ bool j1App::LoadConfig()
 {
 	bool ret = true;
 
-	// TODO 2.3 Load savegame document and nodes
-
 	pugi::xml_parse_result result = document.load_file("config.xml");
 	//LOG("%b", result);
 
@@ -148,8 +146,22 @@ bool j1App::LoadConfig()
 		app_config = root_node.child("app");
 	}
 
-	
-	
+	/*// TODO 2.3 Load savegame document and nodes
+	pugi::xml_document savegame_doc;
+
+	result = savegame_doc.load_file("savegame.xml");
+
+	pugi::xml_node root_savegame_node = savegame_doc.child("savegame");
+
+	//LOG("%b", result);
+
+	if (result == NULL) { //Check that it loaded
+		LOG("Could not load map xml file savegame.xml. pugi error: %s", result.description());
+		ret = false;
+	}
+	else {
+		root_savegame_node = savegame_doc.child("savegame");
+	}*/
 	return ret;
 }
 
