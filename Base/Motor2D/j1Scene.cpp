@@ -88,7 +88,8 @@ bool j1Scene::Update(float dt)
 
 	if (App->input->GetKey(SDL_SCANCODE_1) == KEY_DOWN)
 	{
-		App->physic->CreateCircle(10, 10, 25);
+		++counter;
+		App->physic->CreateCircle(10+counter, 10, 25);
 		// TODO 8: Make sure to add yourself as collision callback to the circle you creates
 	}
 
