@@ -14,14 +14,8 @@
 
 j1Player::j1Player()
 {
-
-	// idle animation
-	idle.PushBack({ 4, 8, 19, 29 });
-	idle.PushBack({ 25, 8, 20, 29 });
-	idle.PushBack({ 48, 8, 19, 29 });
-	idle.PushBack({ 70, 8, 20, 29 });
-	idle.PushBack({ 91, 8, 21, 29 });
-	idle.speed = 0.2f;
+	name.create("player");
+	
 }
 
 j1Player::~j1Player()
@@ -45,7 +39,14 @@ bool j1Player::Awake(const pugi::xml_node& config)
 	audio_shot = App->audio->LoadFx("gunsmoke/shotfx.wav");
 
 	//col = App->collision->AddCollider({(int)position.x, (int)position.y, 19, 28}, COLLIDER_PLAYER, this);
-
+	// idle animation
+	
+	idle.PushBack({ 4, 8, 19, 29 });
+	idle.PushBack({ 25, 8, 20, 29 });
+	idle.PushBack({ 48, 8, 19, 29 });
+	idle.PushBack({ 70, 8, 20, 29 });
+	idle.PushBack({ 91, 8, 21, 29 });
+	idle.speed = 0.2f;
 
 	return ret;
 }
@@ -171,5 +172,17 @@ return true;
 void j1Player::OnCollision(Collider* c1, Collider* c2)
 {
 
+}
+
+bool j1Player::Load(const pugi::xml_node& savegame) {
+	bool ret = true;
+
+	return ret;
+}
+
+bool j1Player::Save(const pugi::xml_node& savegame) {
+	bool ret = true;
+
+	return ret;
 }
 

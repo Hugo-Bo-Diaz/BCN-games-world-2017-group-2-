@@ -82,9 +82,6 @@
     <ClInclude Include="j1Map.h">
       <Filter>Modules</Filter>
     </ClInclude>
-    <ClInclude Include="j1Module.h">
-      <Filter>Modules</Filter>
-    </ClInclude>
     <ClInclude Include="j1Physic.h">
       <Filter>Modules</Filter>
     </ClInclude>
@@ -103,6 +100,7 @@
     <ClInclude Include="j1Window.h">
       <Filter>Modules</Filter>
     </ClInclude>
+    <ClInclude Include="j1Module.h" />
   </ItemGroup>
   <ItemGroup>
     <Xml Include="..\Game\savegame.xml">

@@ -25,6 +25,9 @@ public:
 	bool CleanUp();
 	void OnCollision(Collider* c1, Collider* c2);
 
+	bool Load(const pugi::xml_node& config);
+	bool Save(const pugi::xml_node& config);
+
 public:
 
 	SDL_Texture* graphics = nullptr;

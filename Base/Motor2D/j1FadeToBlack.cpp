@@ -10,6 +10,7 @@
 j1FadeToBlack::j1FadeToBlack()
 {
 	screen = { 0, 0, 1920, 1080 };
+	name.create("fadetoblack");
 }
 
 j1FadeToBlack::~j1FadeToBlack()

@@ -20,6 +20,7 @@ j1Physics::j1Physics() : j1Module()
 {
 	world = NULL;
 	debug = true;
+	name.create("physics");
 }
 
 // Destructor
@@ -27,6 +28,12 @@ j1Physics::~j1Physics()
 {
 }
 
+bool j1Physics::Awake(const pugi::xml_node& config)
+{
+	bool ret = true;
+
+	return ret;
+}
 bool j1Physics::Start()
 {
 	LOG("Creating Physics 2D environment");

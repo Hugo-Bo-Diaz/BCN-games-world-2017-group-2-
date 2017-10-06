@@ -37,6 +37,13 @@ bool j1Window::Awake(const pugi::xml_node& config)
 		
 		width = config.child("width").attribute("value").as_int();
 		height = config.child("height").attribute("value").as_int();
+		
+		SDL_Rect* r = new SDL_Rect;
+		SDL_GetDisplayBounds(0, r);
+		width = r->w;
+		height = r->h;
+		delete r;
+
 		scale = config.child("scale").attribute("value").as_int();
 
 		Res.x = width;
@@ -94,6 +101,7 @@ bool j1Window::PreUpdate()
 
 	return ret;
 }
+
 // Called before quitting
 bool j1Window::CleanUp()
 {
