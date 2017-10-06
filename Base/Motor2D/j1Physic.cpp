@@ -45,12 +45,12 @@ bool j1Physics::Start()
 
 	b2Body* b = world->CreateBody(&body);
 
-	//b2CircleShape shape;
-	//shape.m_radius = PIXEL_TO_METERS(diameter) * 0.5f;
+	b2CircleShape shape;
+	shape.m_radius = PIXEL_TO_METERS(diameter) * 0.5f;
 
 
-	b2PolygonShape shape;
-	shape.SetAsBox(PIXEL_TO_METERS(diameter) * 0.5f, (PIXEL_TO_METERS(diameter) * 0.5f) / 2);
+	//b2PolygonShape shape;
+	//shape.SetAsBox(PIXEL_TO_METERS(diameter) * 0.5f, (PIXEL_TO_METERS(diameter) * 0.5f) / 2);
 
 	b2FixtureDef fixture;
 	fixture.shape = &shape;
