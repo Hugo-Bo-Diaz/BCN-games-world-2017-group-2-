@@ -4,7 +4,7 @@
 #include "j1Window.h"
 #include "p2Vec3.h"
 #include "SDL/include/SDL.h"
-
+#include "j1Render.h"
 
 
 j1Window::j1Window() : j1Module()
@@ -38,6 +38,9 @@ bool j1Window::Awake(pugi::xml_node* config)
 		width = config->child("width").attribute("value").as_int();
 		height = config->child("height").attribute("value").as_int();
 		scale = config->child("scale").attribute("value").as_int();
+
+		Res.x = width;
+		Res.y = height;
 
 		if(config->child("fullscreen").attribute("value").as_bool())
 		{
@@ -82,6 +85,15 @@ bool j1Window::Awake(pugi::xml_node* config)
 	return ret;
 }
 
+// Called before Update
+bool j1Window::PreUpdate()
+{
+	bool ret = true;
+
+	SDL_RenderSetLogicalSize(App->render->renderer, Res.x, Res.y);
+
+	return ret;
+}
 // Called before quitting
 bool j1Window::CleanUp()
 {
@@ -115,3 +127,14 @@ uint j1Window::GetScale() const
 {
 	return scale;
 }
+
+/*
+void j1Window::UpScale()
+{
+	if(scale < 5) scale += 0.1;
+}
+
+void j1Window::DownScale()
+{
+	if(scale > 0.5) scale -= 0.1;
+}*/
