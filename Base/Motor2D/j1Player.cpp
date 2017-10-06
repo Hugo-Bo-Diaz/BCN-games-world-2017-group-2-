@@ -48,7 +48,7 @@ bool j1Player::Awake(const pugi::xml_node& config)
 	idle.PushBack({ 91, 8, 21, 29 });
 	idle.speed = 0.2f;
 
-	player = App->physic->CreateRectangle(position.x, position.y, 30, 50, b2_dynamicBody);
+	player = App->physic->CreateRectangle(position.x, position.y, 30, 50, b2_dynamicBody, true, PLAYER);
 	
 	jump_force = config.child("physics").child("jump_force").attribute("value").as_float();
 	speed = config.child("physics").child("max_speed").attribute("value").as_float(); //cambiar con xml
@@ -115,15 +115,17 @@ bool j1Player::Update(float dt)
 		joystick_angle = atan2(App->input->controller_1.right_joystick.y, App->input->controller_1.right_joystick.x);
 	}
 
-
+	if (!jumping)
+	{ 
 		if (App->input->GetKey(SDL_SCANCODE_W) == KEY_DOWN|| joystick_up || App->input->controller_1.jump)
 		{
 			b2Vec2 jump_force_vector;
 			jump_force_vector.x = 0;
 			jump_force_vector.y = jump_force;
-
 			player->ApplyForce(jump_force_vector);
+			jumping = true;
 		}
+	}
 
 		if (App->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT || joystick_down)
 		{
@@ -199,9 +201,12 @@ return true;
 
 }
 
-void j1Player::OnCollision(Collider* c1, Collider* c2)
+void j1Player::OnCollision(PhysBody* player, PhysBody* other)
 {
-
+	if (other->type == GROUND)
+	{
+		jumping = false;
+    }
 }
 
 bool j1Player::Load(const pugi::xml_node& savegame) {

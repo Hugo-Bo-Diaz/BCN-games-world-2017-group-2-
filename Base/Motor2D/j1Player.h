@@ -24,7 +24,7 @@ public:
 
 	bool Update(float dt);
 	bool CleanUp();
-	void OnCollision(Collider* c1, Collider* c2);
+	void OnCollision(PhysBody*, PhysBody*);
 
 	bool Load(const pugi::xml_node& config);
 	bool Save(const pugi::xml_node& config);
@@ -36,6 +36,7 @@ public:
 	SDL_Texture* sprites = nullptr;
 	Animation* current_animation = nullptr;
 
+	bool jumping = true;
 	Animation idle;
 	Animation left;
 	Animation right;
