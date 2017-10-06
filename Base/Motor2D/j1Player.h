@@ -36,7 +36,7 @@ public:
 	SDL_Texture* sprites = nullptr;
 	Animation* current_animation = nullptr;
 
-	bool jumping = true;
+	
 	Animation idle;
 	Animation left;
 	Animation right;
@@ -45,13 +45,7 @@ public:
 	Animation special_3;
 
 	fPoint position; // en desuso
-	PhysBody* player;
-
-	Collider* col;
-	bool destroyed = false;
-
-	bool moving = false;
-
+	Collider* col; // en desuso
 	float jump_force;
 
 	int font_score = -1;
@@ -73,6 +67,17 @@ public:
 
 	float speed;
 	int god_mode = 0;
+
+
+
+	PhysBody* player;
+    bool jumping = true;
+    bool moving = false;
+
+	
+
+
+
 };
 
 #endif

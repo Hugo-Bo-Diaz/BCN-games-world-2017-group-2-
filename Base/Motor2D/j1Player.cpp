@@ -32,7 +32,6 @@ bool j1Player::Awake(const pugi::xml_node& config)
 
 	graphics = App->tex->Load("textures/test.png");
 
-	destroyed = false;
 	position.x = 30;//READ HERE FROM XML
 	position.y = 0;//READ HERE FROM XML
 
