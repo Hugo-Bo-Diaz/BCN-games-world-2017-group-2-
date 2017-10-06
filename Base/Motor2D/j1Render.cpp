@@ -3,6 +3,8 @@
 #include "j1App.h"
 #include "j1Window.h"
 #include "j1Render.h"
+#include "j1Player.h"
+#include "j1Physic.h"
 
 #define VSYNC true
 
@@ -62,6 +64,11 @@ bool j1Render::Start()
 bool j1Render::PreUpdate()
 {
 	SDL_RenderClear(renderer);
+	iPoint sida;
+	App->player->player->GetPosition(sida.x, sida.y );
+	
+	camera.x = -sida.x + 500;
+
 	return true;
 }
 

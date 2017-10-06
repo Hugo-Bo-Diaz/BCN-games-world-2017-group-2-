@@ -12,7 +12,7 @@
 
 j1Scene::j1Scene() : j1Module()
 {
-	name.create("scene");
+	name.create("scenes");
 }
 
 // Destructor
@@ -20,10 +20,18 @@ j1Scene::~j1Scene()
 {}
 
 // Called before render is available
-bool j1Scene::Awake()
+bool j1Scene::Awake(const pugi::xml_node& config)
 {
 	LOG("Loading Scene");
 	bool ret = true;
+
+	pugi::xml_node node = config.child("map");
+	while (node.attribute("source").as_string() != "") {
+		p2SString* new_map = new p2SString;
+		new_map->create(config.child("map").attribute("source").as_string());
+		maps_to_load.add(new_map);
+		node = node.next_sibling("map");
+	}
 
 	return ret;
 }
@@ -35,7 +43,12 @@ bool j1Scene::Start()
 	//img = App->tex->Load("textures/test.png");
 	// LOAD MAPS AND MUSIC HERE
 
-	if (ret == true) ret = App->map->Load("TMX tests/Trial.tmx");
+	//if (ret == true) ret = App->map->Load("TMX tests/Trial.tmx");
+	p2List_item<p2SString*>* item = maps_to_load.start;
+	while (ret == true && item != nullptr) {
+		App->map->Load(item->data->GetString());
+		item = item->next;
+	}
 	//if (ret == true) ret = App->map->Load("Poner Direccion de Mapa aquí");
 	
 	if (ret == true) ret = App->audio->PlayMusic("audio/music/music_sadpiano.ogg");

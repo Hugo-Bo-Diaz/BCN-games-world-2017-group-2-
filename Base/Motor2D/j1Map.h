@@ -128,6 +128,8 @@ enum renderorder {
 
 struct Map_info {
 	pugi::xml_document map_file;
+	
+	bool draw;
 
 	orientation	map_type;
 	uint		renderorder;

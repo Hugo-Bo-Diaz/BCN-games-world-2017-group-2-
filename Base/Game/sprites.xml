@@ -1,0 +1,9 @@
+<sprites>
+    <module>
+        <sheet value = "image_name.png">
+            <sprite_1 x="0" y="0" w="10" h="10">
+        </sheet>
+    </module>
+    <paralax>
+    </paralax>
+</sprites>

@@ -7,6 +7,7 @@
 #include "p2Log.h"
 #include "j1Scene.h"
 #include "math.h"
+#include "j1Window.h"
 
 #ifdef _DEBUG
 #pragma comment( lib, "Box2D/libx86/Debug/Box2D.lib" )
@@ -32,26 +33,28 @@ bool j1Physics::Awake(const pugi::xml_node& config)
 {
 	bool ret = true;
 
-	return ret;
-}
-bool j1Physics::Start()
-{
-	LOG("Creating Physics 2D environment");
-
-	world = new b2World(b2Vec2(GRAVITY_X, 14));
+	world = new b2World({config.child("gravity").attribute("x").as_float(),config.child("gravity").attribute("y").as_float()});
 	// TODO 3: You need to make ModulePhysics class a contact listener
 
 	world->SetContactListener(App->physic);
 
 	// big static circle as "ground" in the middle of the screen
 	int x = 0;
-	int y = SCREEN_HEIGHT / 1.5f;
-	int diameter = SCREEN_WIDTH / 2;
+	int y = 1000;
+	int diameter = config.child("test_platform").attribute("h").as_int();
 
 
-	CreateCircle(x, y, diameter * 0.5f, b2_staticBody);
+	//CreateCircle(x, y, diameter * 0.5f, b2_staticBody);
 
-	CreateRectangle(x, y, diameter*2, diameter/2, b2_staticBody);
+	CreateRectangle(x, y, diameter * 1.5, diameter / 4, b2_staticBody);
+	CreateRectangle(x + 1000, y, config.child("test_platform").attribute("w").as_int(), config.child("test_platform").attribute("h").as_int(), b2_staticBody);
+	CreateRectangle(x + 2000, y, config.child("test_platform").attribute("w").as_int(), config.child("test_platform").attribute("h").as_int(), b2_staticBody);
+
+	return ret;
+}
+bool j1Physics::Start()
+{
+	LOG("Creating Physics 2D environment");
 
 	return true;
 }
@@ -111,6 +114,7 @@ PhysBody* j1Physics::CreateRectangle(int x, int y, int width, int height, b2Body
 	b2FixtureDef fixture;
 	fixture.shape = &box;
 	fixture.density = 1.0f;
+	fixture.friction = 0;
 
 	b->CreateFixture(&fixture);
 

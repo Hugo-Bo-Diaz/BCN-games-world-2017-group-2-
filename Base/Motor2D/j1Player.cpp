@@ -50,8 +50,8 @@ bool j1Player::Awake(const pugi::xml_node& config)
 
 	player = App->physic->CreateRectangle(position.x, position.y, 30, 50, b2_dynamicBody);
 	
-	jump_force = -250;
-	speed = 250; //cambiar con xml
+	jump_force = config.child("physics").child("jump_force").attribute("value").as_float();
+	speed = config.child("physics").child("max_speed").attribute("value").as_float(); //cambiar con xml
 
 	return ret;
 }
@@ -130,10 +130,7 @@ bool j1Player::Update(float dt)
 			
 		}
 
-	if (App->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT || joystick_right)
-	{
-		position.x += speed;
-		if (current_animation != &right)
+		if (App->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT || joystick_right)
 		{
 			b2Vec2 speedo;
 			speedo.x = speed;
@@ -162,19 +159,8 @@ bool j1Player::Update(float dt)
 			}
 		}
 
-	}
+	
 
-
-	if (App->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT || joystick_left)
-	{
-		position.x -= speed;
-		if (current_animation != &left)
-		{
-			left.Reset();
-			current_animation = &left;
-		}
-
-	}
 
 
 
@@ -207,7 +193,7 @@ bool j1Player::Update(float dt)
 	App->render->Blit(sprites, position.x, position.y);
 //Draw HUD(lifes / powerups)---------------------------------
 
-	
+
 
 return true;
 

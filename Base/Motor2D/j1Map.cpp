@@ -44,7 +44,7 @@ void j1Map::Draw()
 
 	iPoint pos = { 0,0 };
 
-	while (item_map != nullptr) { //Check there is a map
+	while (item_map != nullptr && item_map->data->draw) { //Check there is a map
 		
 		p2List_item<tileset_info*>* item_tileset = item_map->data->tilesets.start; //Start tileset list
 	
@@ -198,6 +198,7 @@ bool j1Map::LoadMapData(const pugi::xml_node& map_node, Map_info& item_map) {
 	item_map.tileheight = map_node.attribute("tileheight").as_uint();
 	item_map.nextobjectid = map_node.attribute("nextobjectid").as_uint();
 
+	item_map.draw = map_node.attribute("draw").as_bool();
 	// Load Tilesets
 	/*
 	if (map_node->child("tileset").attribute("firstgid").as_uint() != 0) {
