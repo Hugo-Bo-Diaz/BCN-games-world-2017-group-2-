@@ -45,7 +45,6 @@ bool j1Player::Start()
 
 	font_score = App->fonts->Load("fonts/font.png", "0123456789abcdefghijklmnopqrstuvwxyz", 1);
 	col = App->collision->AddCollider({(int)position.x, (int)position.y, 19, 28}, COLLIDER_PLAYER, this);
-	col_base= App->collision->AddCollider({ (int)position.x, (int)position.y+18, 17, 9 }, COLLIDER_PLAYER_BASE,this);
 
 	return true;
 }
@@ -97,17 +96,17 @@ bool j1Player::Update()
 		}
 
 
-		if ((App->input->GetKey[SDL_SCANCODE_W] == KEY_STATE::KEY_REPEAT || joystick_up || App->input->controller_1.w_button) && camera_y < position.y)
+		if ((App->input->GetKey[SDL_SCANCODE_W] == KEY_REPEAT || joystick_up || App->input->controller_1.w_button))
 		{
 			position.y -= speed;
 		}
 
-		if ((App->input->GetKey[SDL_SCANCODE_S] == KEY_STATE::KEY_REPEAT || joystick_down || App->input->controller_1.s_button) && camera_y + SCREEN_HEIGHT - 5 > position.y + 32)
+		if ((App->input->GetKey[SDL_SCANCODE_S] == KEY_REPEAT || joystick_down || App->input->controller_1.s_button))
 		{
 			position.y += speed;
 		}
 
-		if ((App->input->GetKey[SDL_SCANCODE_D] == KEY_STATE::KEY_REPEAT || joystick_right || App->input->controller_1.d_button) && App->render->camera.x + SCREEN_WIDTH > position.x + 19)
+		if ((App->input->GetKey[SDL_SCANCODE_D] == KEY_REPEAT || joystick_right || App->input->controller_1.d_button))
 		{
 			position.x += speed;
 			if (current_animation != &right)
@@ -118,7 +117,7 @@ bool j1Player::Update()
 
 		}
 
-		if ((App->input->GetKey[SDL_SCANCODE_A] == KEY_STATE::KEY_REPEAT || joystick_left || App->input->controller_1.a_button) && App->render->camera.x < position.x)
+		if ((App->input->GetKey[SDL_SCANCODE_A] == KEY_REPEAT || joystick_left || App->input->controller_1.a_button))
 		{
 			position.x -= speed;
 			if (current_animation != &left)
@@ -131,13 +130,13 @@ bool j1Player::Update()
 
 
 
-		if ((App->input->GetKey[SDL_SCANCODE_D] == KEY_STATE::KEY_IDLE)
-			&& (App->input->GetKey[SDL_SCANCODE_A] == KEY_STATE::KEY_IDLE) && joystick_left == false && joystick_right == false)
+		if ((App->input->GetKey[SDL_SCANCODE_D] == KEY_IDLE)
+			&& (App->input->GetKey[SDL_SCANCODE_A] == KEY_IDLE) && joystick_left == false && joystick_right == false)
 		{
 			current_animation = &idle;
 		}
-		if (App->input->GetKey[SDL_SCANCODE_D] == KEY_STATE::KEY_REPEAT
-			&& App->input->GetKey[SDL_SCANCODE_A] == KEY_STATE::KEY_REPEAT && joystick_left == false && joystick_right == false)
+		if (App->input->GetKey[SDL_SCANCODE_D] == KEY_REPEAT
+			&& App->input->GetKey[SDL_SCANCODE_A] == KEY_REPEAT && joystick_left == false && joystick_right == false)
 		{
 			current_animation = &idle;
 		}
@@ -180,50 +179,45 @@ bool j1Player::Update()
 		}
 	}
 
-	if (SDL_GetTicks() > death_time && death_time != -1 && destroyed == true)
-	{
-	//	death_time = SDL_GetTicks();
 
-		if (lifes != 0)
-		{
-			App->fade->FadeToBlack((Module*)App->scene_space, (Module*)App->scene_transit, 0.3f);
-			death_time = -1;
-			//death = false;
-		}
-		else
-		{
-			lifes = 3;
-			LOG("OUT OF LIFES");
-			App->fade->FadeToBlack((Module*)App->scene_space, (Module*)App->scene_gameover);
-			death_time = -1;
-			//death = false;
-		}
-	}
-	if (App->input->GetKey[SDL_SCANCODE_N] == KEY_STATE::KEY_REPEAT&& App->fade->IsFading() == false)
-	{
-		App->fade->FadeToBlack((Module*)App->scene_space, (Module*)App->scene_gameover);
-	}
-	if (App->input->GetKey[SDL_SCANCODE_M] == KEY_STATE::KEY_REPEAT && destroyed == false && App->fade->IsFading() == false)
-	{
-		lifes -= 1;
-		App->particles->AddParticle(App->particles->player_death, position.x, position.y, COLLIDER_NONE);
-		death_time = SDL_GetTicks() + 3000;
-		destroyed = true;
+//	death_time = SDL_GetTicks();
 
+	if (lifes != 0)
+	{
+		App->fade->FadeToBlack((j1Module*)App->scene_space, (j1Module*)App->scene_transit, 0.3f);
+		//death = false;
+	}
+	else
+	{
+		lifes = 3;
+		LOG("OUT OF LIFES");
+		App->fade->FadeToBlack((j1Module*)App->scene_space, (j1Module*)App->scene_gameover);
+		//death = false;
 	}
 
-	return true;
+
+if (App->input->GetKey[SDL_SCANCODE_N] == KEY_REPEAT&& App->fade->IsFading() == false)
+{
+	App->fade->FadeToBlack((j1Module*)App->scene_space, (j1Module*)App->scene_gameover);
+}
+if (App->input->GetKey[SDL_SCANCODE_M] == KEY_REPEAT && destroyed == false && App->fade->IsFading() == false)
+{
+	lifes -= 1;
+	App->particles->AddParticle(App->particles->player_death, position.x, position.y, COLLIDER_NONE);
+	destroyed = true;
 }
 
+return true;
+
+}
 
 void j1Player::OnCollision(Collider* c1, Collider* c2)
 {
 	//death_time = SDL_GetTicks();
 	if (c1 == col && c2->type == COLLIDER_ENEMY_SHOT
-		&& destroyed == false && App->fade->IsFading() == false)
+		 && App->fade->IsFading() == false)
 	{
 			lifes -= 1;
-
 
 			if (destroyed == false)
 			{
@@ -232,26 +226,8 @@ void j1Player::OnCollision(Collider* c1, Collider* c2)
 			}
 
 			else death = false;
-			/*if (lifes != 0)
-			{
-				if (SDL_GetTicks() > death_time + 3000)
-				{
-					App->fade->FadeToBlack((Module*)App->scene_space, (Module*)App->scene_transit, 0.3f);
-				}
-			}
-			else
-			{
-				lifes = 3;
-				LOG("OUT OF LIFES");
-				if (SDL_GetTicks() > death_time + 3000)
-				{
-					App->fade->FadeToBlack((Module*)App->scene_space, (Module*)App->scene_gameover);
-				}
-			}*/
 			destroyed = true;
-		}
-
 	}
 
-
 }
+

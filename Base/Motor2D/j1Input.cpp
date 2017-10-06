@@ -32,7 +32,26 @@ bool j1Input::Awake(pugi::xml_node* config)
 		LOG("SDL_EVENTS could not initialize! SDL_Error: %s\n", SDL_GetError());
 		ret = false;
 	}
-
+	if (SDL_InitSubSystem(SDL_INIT_GAMECONTROLLER) < 0)
+	{
+		LOG("SDL_GAMEPAD could not initialize! SDL_Error: %s\n", SDL_GetError());
+		ret = false;
+	}
+	else
+	{
+		if (SDL_NumJoysticks() > 0)
+		{
+			Controller = SDL_GameControllerOpen(0);
+			if (Controller == nullptr)
+			{
+				LOG("Controller couldn't be initialized SDL_Error: %s\n", SDL_GetError());
+			}
+			else
+			{
+				controller_connected == true;
+			}
+		}
+	};
 	return ret;
 }
 
@@ -126,6 +145,20 @@ bool j1Input::PreUpdate()
 		}
 	}
 
+
+	controller_1.left_joystick.x = ((float)SDL_GameControllerGetAxis(Controller, SDL_CONTROLLER_AXIS_LEFTX) / 32767.0f);
+	controller_1.left_joystick.y = ((float)SDL_GameControllerGetAxis(Controller, SDL_CONTROLLER_AXIS_LEFTY) / 32767.0f);
+	controller_1.x_button = ((bool)SDL_GameControllerGetButton(Controller, SDL_CONTROLLER_BUTTON_A));
+	controller_1.z_button = ((bool)SDL_GameControllerGetButton(Controller, SDL_CONTROLLER_BUTTON_X));
+	controller_1.x2_button = ((bool)SDL_GameControllerGetButton(Controller, SDL_CONTROLLER_BUTTON_A));
+	controller_1.c_button = ((bool)SDL_GameControllerGetButton(Controller, SDL_CONTROLLER_BUTTON_B));
+	controller_1.esc_button = ((bool)SDL_GameControllerGetButton(Controller, SDL_CONTROLLER_BUTTON_BACK));
+	controller_1.space_button = ((bool)SDL_GameControllerGetButton(Controller, SDL_CONTROLLER_BUTTON_START));
+	controller_1.w_button = ((bool)SDL_GameControllerGetButton(Controller, SDL_CONTROLLER_BUTTON_DPAD_UP));
+	controller_1.a_button = ((bool)SDL_GameControllerGetButton(Controller, SDL_CONTROLLER_BUTTON_DPAD_LEFT));
+	controller_1.s_button = ((bool)SDL_GameControllerGetButton(Controller, SDL_CONTROLLER_BUTTON_DPAD_DOWN));
+	controller_1.d_button = ((bool)SDL_GameControllerGetButton(Controller, SDL_CONTROLLER_BUTTON_DPAD_RIGHT));
+
 	return true;
 }
 
@@ -135,6 +168,7 @@ bool j1Input::CleanUp()
 {
 	LOG("Quitting SDL event subsystem");
 	SDL_QuitSubSystem(SDL_INIT_EVENTS);
+	SDL_QuitSubSystem(SDL_INIT_GAMECONTROLLER);
 	return true;
 }
 

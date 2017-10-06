@@ -1,21 +1,22 @@
 #include <math.h>
-#include "Globals.h"
-#include "Application.h"
-#include "ModuleFadeToBlack.h"
-#include "ModuleRender.h"
+#include "p2Log.h"
+#include "j1App.h"
+#include "j1FadeToBlack.h"
+#include "j1Render.h"
+#include "j1Window.h"
 #include "SDL/include/SDL_render.h"
 #include "SDL/include/SDL_timer.h"
 
-ModuleFadeToBlack::ModuleFadeToBlack()
+j1FadeToBlack::j1FadeToBlack()
 {
-	screen = {0, 0, SCREEN_WIDTH * SCREEN_SIZE, SCREEN_HEIGHT * SCREEN_SIZE};
+	screen = { 0, 0, App->win->width * App->win->scale, App->win->height * App->win->scale };
 }
 
-ModuleFadeToBlack::~ModuleFadeToBlack()
+j1FadeToBlack::~j1FadeToBlack()
 {}
 
 // Load assets
-bool ModuleFadeToBlack::Start()
+bool j1FadeToBlack::Start()
 {
 	LOG("Preparing Fade Screen");
 	SDL_SetRenderDrawBlendMode(App->render->renderer, SDL_BLENDMODE_BLEND);
@@ -23,10 +24,10 @@ bool ModuleFadeToBlack::Start()
 }
 
 // Update: draw background
-update_status ModuleFadeToBlack::Update()
+bool j1FadeToBlack::Update()
 {
 	if(current_step == fade_step::none)
-		return UPDATE_CONTINUE;
+		return true;
 
 	Uint32 now = SDL_GetTicks() - start_time;
 	float normalized = MIN(1.0f, (float)now / (float)total_time);
@@ -58,11 +59,11 @@ update_status ModuleFadeToBlack::Update()
 	SDL_SetRenderDrawColor(App->render->renderer, 0, 0, 0, (Uint8)(normalized * 255.0f));
 	SDL_RenderFillRect(App->render->renderer, &screen);
 
-	return UPDATE_CONTINUE;
+	return true;
 }
 
 // Fade to black. At mid point deactivate one module, then activate the other
-bool ModuleFadeToBlack::FadeToBlack(Module* module_off, Module* module_on, float time)
+bool j1FadeToBlack::FadeToBlack(j1Module* module_off, j1Module* module_on, float time)
 {
 	bool ret = false;
 
@@ -79,7 +80,7 @@ bool ModuleFadeToBlack::FadeToBlack(Module* module_off, Module* module_on, float
 	return ret;
 }
 
-bool ModuleFadeToBlack::IsFading() const
+bool j1FadeToBlack::IsFading() const
 {
 	return current_step != fade_step::none;
 }

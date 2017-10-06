@@ -7,9 +7,23 @@
 #define NUM_MOUSE_BUTTONS 5
 #define LAST_KEYS_PRESSED_BUFFER 50
 
-
-
 struct SDL_Rect;
+
+struct GamePad {
+	p2Point<float> left_joystick;
+	p2Point<float> right_joystick;
+	bool z_button;
+	bool x2_button;
+	bool x_button;
+	bool c_button;
+	bool esc_button;
+	bool space_button;
+	bool w_button;
+	bool a_button;
+	bool s_button;
+	bool d_button;
+
+};
 
 enum j1EventWindow
 {
@@ -82,6 +96,10 @@ private:
 	int			mouse_motion_y;
 	int			mouse_x;
 	int			mouse_y;
+public:
+	SDL_GameController* Controller = nullptr;
+	GamePad controller_1;
+	bool controller_connected;
 };
 
 #endif // __j1INPUT_H__

@@ -9,6 +9,7 @@
 #include "j1Audio.h"
 #include "j1Player.h"
 #include "j1FadeToBlack.h"
+#include "j1Window.h"
 #include "Enemy.h"
 #include "Enemy_1.h"
 
@@ -42,11 +43,11 @@ bool j1Enemies::PreUpdate()
 	{
 		if(queue[i].type != ENEMY_TYPES::NO_TYPE)
 		{
-			if(queue[i].y * SCREEN_SIZE > App->render->camera.y + (App->render->camera.h * SCREEN_SIZE) - SPAWN_MARGIN)
+			if (queue[i].y * App->win->scale > App->render->camera.y + (App->render->camera.h * App->win->scale) - SPAWN_MARGIN)
 			{
 				SpawnEnemy(queue[i]);
 				queue[i].type = ENEMY_TYPES::NO_TYPE;
-				LOG("Spawning enemy at %d", queue[i].y * SCREEN_SIZE);
+				LOG("Spawning enemy at %d", queue[i].y * App->win->scale);
 			}
 		}
 	}
@@ -91,10 +92,10 @@ bool j1Enemies::PostUpdate()
 	{
 		if(enemies[i] != nullptr)
 		{
-			if (enemies[i]->position.y * SCREEN_SIZE >(App->render->camera.y) + 495 || enemies[i]->position.y < -3000 
-				|| (App->player->destroyed == false && App->player->death_time != -1))
+			if (enemies[i]->position.y * App->win->scale >(App->render->camera.y) + 495 || enemies[i]->position.y < -3000
+				|| (App->player->destroyed == false ))
 			{
-				LOG("DeSpawning enemy at %d", enemies[i]->position.y * SCREEN_SIZE);
+				LOG("DeSpawning enemy at %d", enemies[i]->position.y * App->win->scale);
 				delete enemies[i];
 				enemies[i] = nullptr;
 			}
