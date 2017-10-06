@@ -1,6 +1,6 @@
 #include "j1App.h"
 #include "Enemy.h"
-#include "j1Collision.h"
+//#include "j1Collision.h"
 #include "j1Particles.h"
 #include "j1Render.h"
 #include "j1Player.h"
@@ -14,10 +14,10 @@ Enemy::Enemy(int x, int y) : position(x, y)
 
 Enemy::~Enemy()
 {
-	if (collider != nullptr)
+/*	if (collider != nullptr)
 		collider->to_delete = true;
 	if (col != nullptr)
-		col->to_delete = true;
+		col->to_delete = true;*/
 }
 
 const Collider* Enemy::GetCollider() const
@@ -40,7 +40,7 @@ void Enemy::Draw(SDL_Texture* sprites)
 
 void Enemy::OnCollision(Collider* c1, Collider* c2)
 {
-	if (c1 == col && c1->type == COLLIDER_ENEMY_BASE && c2->type == COLLIDER_WALL)
+/*	if (c1 == col && c1->type == COLLIDER_ENEMY_BASE && c2->type == COLLIDER_WALL)
 	{ 
 		if (ignore_walls == false)
 		{
@@ -63,6 +63,6 @@ void Enemy::OnCollision(Collider* c1, Collider* c2)
 	if (c1 == collider)
 	{
 		//App->particles->AddParticle(App->particles->explosion, position.x, position.y);
-	}
+	}*/
 }
 

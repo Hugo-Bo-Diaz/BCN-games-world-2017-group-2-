@@ -110,9 +110,9 @@ bool j1Enemies::CleanUp()
 {
 	LOG("Freeing all enemies");
 
-	App->tex->Unload(sprites);
+	/*App->tex->Unload(sprites);
 	App->audio->UnLoadFx(sounds[0]);
-	App->audio->UnLoadFx(sounds[1]);
+	App->audio->UnLoadFx(sounds[1]);*/
 
 	for(uint i = 0; i < MAX_ENEMIES; ++i)
 	{
@@ -180,7 +180,7 @@ void j1Enemies::OnCollision(Collider* c1, Collider* c2)
 		if ((enemies[i] != nullptr) && ((enemies[i]->GetCollider() == c1) || (enemies[i]->GetCol() == c1)))
 		{
 			enemies[i]->OnCollision(c1, c2);
-			if (c2->type == COLLIDER_PLAYER_SHOT)
+			/*if (c2->type == COLLIDER_PLAYER_SHOT)
 			{
 				enemies[i]->hp -= 1;
 				enemies[i]->hit = true;
@@ -189,7 +189,7 @@ void j1Enemies::OnCollision(Collider* c1, Collider* c2)
 					delete enemies[i];
 					enemies[i] = nullptr;
 				}
-			}
+			}*/
 			break;
 		}
 	}

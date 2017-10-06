@@ -48,7 +48,7 @@ bool j1Input::Awake(pugi::xml_node* config)
 			}
 			else
 			{
-				controller_connected == true;
+				controller_connected = true;
 			}
 		}
 	};
@@ -148,6 +148,8 @@ bool j1Input::PreUpdate()
 
 	controller_1.left_joystick.x = ((float)SDL_GameControllerGetAxis(Controller, SDL_CONTROLLER_AXIS_LEFTX) / 32767.0f);
 	controller_1.left_joystick.y = ((float)SDL_GameControllerGetAxis(Controller, SDL_CONTROLLER_AXIS_LEFTY) / 32767.0f);
+	controller_1.right_joystick.x = ((float)SDL_GameControllerGetAxis(Controller, SDL_CONTROLLER_AXIS_RIGHTX) / 32767.0f);
+	controller_1.right_joystick.y = ((float)SDL_GameControllerGetAxis(Controller, SDL_CONTROLLER_AXIS_RIGHTY) / 32767.0f);
 	controller_1.change_character = ((bool)SDL_GameControllerGetButton(Controller, SDL_CONTROLLER_BUTTON_X));	
 	controller_1.jump = ((bool)SDL_GameControllerGetButton(Controller, SDL_CONTROLLER_BUTTON_A));	
 	controller_1.anchor_big = ((bool)SDL_GameControllerGetButton(Controller, SDL_CONTROLLER_BUTTON_A));

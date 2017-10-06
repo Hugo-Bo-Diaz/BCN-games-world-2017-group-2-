@@ -5,7 +5,7 @@
 #include "j1Audio.h"
 #include "j1Textures.h"
 #include "j1Render.h"
-#include "j1Collision.h"
+//#include "j1Collision.h"
 #include "j1Particles.h"
 #include "j1Player.h"
 
@@ -80,7 +80,7 @@ bool j1Particles::Start()
 bool j1Particles::CleanUp()
 {
 	LOG("Unloading particles /n");
-	App->tex->Unload(graphics);
+//	App->tex->Unload(graphics);
 
 	// Unload fx
 
@@ -125,7 +125,7 @@ bool j1Particles::Update()
 	return true;
 }
 
-void j1Particles::AddParticle(const Particle& particle, int x, int y, COLLIDER_TYPE collider_type, Uint32 delay, int xspeed, int yspeed)
+/*void j1Particles::AddParticle(const Particle& particle, int x, int y, Uint32 delay, int xspeed, int yspeed)
 {
 	for(uint i = 0; i < MAX_ACTIVE_PARTICLES; ++i)
 	{
@@ -143,7 +143,7 @@ void j1Particles::AddParticle(const Particle& particle, int x, int y, COLLIDER_T
 			{
 				p->speed.y = yspeed;
 			}			
-			if(collider_type != COLLIDER_NONE)
+			/*if(collider_type != COLLIDER_NONE)
 				p->collider = App->collision->AddCollider(p->anim.GetCurrentFrame(), collider_type, this);
 			active[i] = p;
 
@@ -151,7 +151,7 @@ void j1Particles::AddParticle(const Particle& particle, int x, int y, COLLIDER_T
 		}
 	}
 }
-
+*/
 void j1Particles::OnCollision(Collider* c1, Collider* c2)
 {
 	for(uint i = 0; i < MAX_ACTIVE_PARTICLES; ++i)
@@ -159,7 +159,7 @@ void j1Particles::OnCollision(Collider* c1, Collider* c2)
 		// Always destroy particles that collide
 		if(active[i] != nullptr && active[i]->collider == c1)
 		{
-			App->particles->AddParticle(App->particles->hitmarker, active[i]->position.x - 4, active[i]->position.y-4, COLLIDER_PARTICLE, 0);
+			//App->particles->AddParticle(App->particles->hitmarker, active[i]->position.x - 4, active[i]->position.y-4, COLLIDER_PARTICLE, 0);
 			delete active[i];
 			active[i] = nullptr;
 			break;
@@ -184,8 +184,8 @@ fx(p.fx), born(p.born), life(p.life)
 Particle::~Particle()
 {
 
-	if (collider != nullptr)
-		collider->to_delete = true;
+	/*if (collider != nullptr)
+		collider->to_delete = true;*/
 }
 
 bool Particle::Update()
@@ -196,11 +196,11 @@ bool Particle::Update()
 	{
 		if ((SDL_GetTicks() - born) > life)
 		{
-			if (collider != nullptr && collider->type == COLLIDER_PLAYER_SHOT)
+			/*if (collider != nullptr && collider->type == COLLIDER_PLAYER_SHOT)
 			{
 				App->particles->AddParticle(App->particles->end_of_bullet, position.x-4, position.y-4, COLLIDER_PARTICLE, 0);
 			}
-
+			*/
 			ret = false;
 		}
 	}
@@ -210,10 +210,10 @@ bool Particle::Update()
 
 	position.x += speed.x;
 	position.y += speed.y;
-
+	/*
 	if(collider != nullptr)
 		collider->SetPos(position.x, position.y);
-
+		*/
 	return ret;
 }
 

@@ -5,7 +5,7 @@
 #include "Animation.h"
 #include "P2Defs.h"
 #include "p2Point.h"
-#include "j1Collision.h"
+//#include "j1Collision.h"
 
 #define MAX_ACTIVE_PARTICLES 500
 
@@ -42,7 +42,7 @@ public:
 	void OnCollision(Collider* c1, Collider* c2);
 	uint tnt_sound;
 
-	void AddParticle(const Particle& particle, int x, int y, COLLIDER_TYPE collider_type = COLLIDER_NONE, Uint32 delay = 0, int xspeed = 100, int yspeed = 100);
+	//void AddParticle(const Particle& particle, int x, int y, Uint32 delay = 0, int xspeed = 100, int yspeed = 100);
 
 private:
 

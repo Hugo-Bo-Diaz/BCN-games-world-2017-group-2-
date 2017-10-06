@@ -1,6 +1,6 @@
 #include "j1App.h"
 #include "Enemy_1.h"
-#include "j1Collision.h"
+//#include "j1Collision.h"
 #include "j1Enemies.h"
 #include <stdlib.h>
 #include <time.h>
@@ -27,12 +27,10 @@ Enemy_1::Enemy_1(int x, int y) : Enemy(x, y)
 
 	srand(time(NULL));
 
-	collider = App->collision->AddCollider({0, 0, 18, 27}, COLLIDER_TYPE::COLLIDER_ENEMY, (Module*)App->enemies);
-	col = App->collision->AddCollider({ 0, 0, 18, 10 }, COLLIDER_TYPE::COLLIDER_ENEMY_BASE,(Module*)App->enemies);
+	/*collider = App->collision->AddCollider({0, 0, 18, 27}, COLLIDER_TYPE::COLLIDER_ENEMY, (Module*)App->enemies);
+	col = App->collision->AddCollider({ 0, 0, 18, 10 }, COLLIDER_TYPE::COLLIDER_ENEMY_BASE,(Module*)App->enemies);*/
 
 	original_pos.y = y;
-	path_dest.y = position.y;
-	path_dest.x = position.x;
 	hp = 1;
 	
 }
@@ -44,9 +42,9 @@ int Enemy_1::value_between(int min, int max)
 
 void Enemy_1::Move()
 {
-	col->SetPos(position.x, position.y + 17);
+	/*col->SetPos(position.x, position.y + 17);
 	if (collider != nullptr)
-		collider->SetPos(position.x, position.y);
+		collider->SetPos(position.x, position.y);*/
 
 }
 Enemy_1::~Enemy_1()
@@ -56,5 +54,5 @@ Enemy_1::~Enemy_1()
 		App->player->score += 200;
 		App->enemies->Playsound(1);
 	}
-	App->particles->AddParticle(App->particles->cookiedeath, position.x, position.y, COLLIDER_NONE);
+	//App->particles->AddParticle(App->particles->cookiedeath, position.x, position.y, COLLIDER_NONE);
 }
