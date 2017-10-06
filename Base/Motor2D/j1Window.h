@@ -32,6 +32,12 @@ public:
 	// Retrieve window scale
 	uint GetScale() const;
 
+	/*// Scale up
+	void UpScale();
+
+	// Scale down
+	void DownScale();*/
+
 public:
 	//The window we'll be rendering to
 	SDL_Window* window;

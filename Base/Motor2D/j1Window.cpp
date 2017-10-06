@@ -115,3 +115,14 @@ uint j1Window::GetScale() const
 {
 	return scale;
 }
+
+/*
+void j1Window::UpScale()
+{
+	if(scale < 5) scale += 0.1;
+}
+
+void j1Window::DownScale()
+{
+	if(scale > 0.5) scale -= 0.1;
+}*/
