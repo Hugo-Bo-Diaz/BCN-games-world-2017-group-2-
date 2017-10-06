@@ -51,6 +51,7 @@ public:
 	j1Physics();
 	~j1Physics();
 
+	bool Awake(const pugi::xml_node& config);
 	bool Start();
 	bool PreUpdate();
 	bool PostUpdate();

@@ -14,22 +14,20 @@
 
 j1Player::j1Player()
 {
-
-	// idle animation
-	idle.PushBack({ 4, 8, 19, 29 });
-	idle.PushBack({ 25, 8, 20, 29 });
-	idle.PushBack({ 48, 8, 19, 29 });
-	idle.PushBack({ 70, 8, 20, 29 });
-	idle.PushBack({ 91, 8, 21, 29 });
-	idle.speed = 0.2f;
+	name.create("player");
+	
 }
 
 j1Player::~j1Player()
 {}
 
-// Load assets
-bool j1Player::Start()
+// Awake, actually load things?
+bool j1Player::Awake(const pugi::xml_node& config)
 {
+	bool ret = true;
+
+	// Cargar aqui los xmls de sprites y de posicion de personajes en el mapa
+	// Propiedades por xml...
 	LOG("Loading player");
 
 	graphics = App->tex->Load("textures/test.png");
@@ -37,17 +35,34 @@ bool j1Player::Start()
 	destroyed = false;
 	position.x = 30;//READ HERE FROM XML
 	position.y = 0;//READ HERE FROM XML
-	
+
 	audio_shot = App->audio->LoadFx("gunsmoke/shotfx.wav");
 
 	//col = App->collision->AddCollider({(int)position.x, (int)position.y, 19, 28}, COLLIDER_PLAYER, this);
+	// idle animation
+	
+	idle.PushBack({ 4, 8, 19, 29 });
+	idle.PushBack({ 25, 8, 20, 29 });
+	idle.PushBack({ 48, 8, 19, 29 });
+	idle.PushBack({ 70, 8, 20, 29 });
+	idle.PushBack({ 91, 8, 21, 29 });
+	idle.speed = 0.2f;
 
 	player = App->physic->CreateRectangle(position.x, position.y, 30, 50, b2_dynamicBody);
 	
 	jump_force = -250;
 	speed = 250; //cambiar con xml
 
-	return true;
+	return ret;
+}
+// Load assets
+bool j1Player::Start()
+{
+	bool ret = true;
+
+	// Inicializar lo necesario del jugador, crear los personajes en el mapa
+
+	return ret;
 }
 
 // Unload assets
@@ -55,8 +70,9 @@ bool j1Player::CleanUp()
 {
 	LOG("Unloading player");
 	/*App->audio->Unload(audio_shot);
-	App->tex->Unload(graphics);
+	
 	App->fonts->UnLoad(font_score);*/
+	App->tex->UnLoad(graphics);
 
 	if (col != nullptr)
 		//col->to_delete = true;
@@ -72,32 +88,33 @@ bool j1Player::Update(float dt)
 	joystick_left = 0;
 	joystick_right = 0;
 
-		if (App->input->controller_1.left_joystick.x > 0.25)
-		{
-			joystick_right = 1;
-		}
-		if (App->input->controller_1.left_joystick.x < -0.25)
-		{
-			joystick_left = 1;
-		}
+	if (App->input->controller_1.left_joystick.x > 0.25)
+	{
+		joystick_right = 1;
+	}
+	if (App->input->controller_1.left_joystick.x < -0.25)
+	{
+		joystick_left = 1;
+	}
 
-		joystick_down = 0;
-		joystick_up = 0;
+	joystick_down = 0;
+	joystick_up = 0;
 
-		if (App->input->controller_1.left_joystick.y > 0.25)
-		{
-			joystick_down = 1;
-		}
-		if (App->input->controller_1.left_joystick.y < -0.25)
-		{
-			joystick_up = 1;
-		}
+	if (App->input->controller_1.left_joystick.y > 0.25)
+	{
+		joystick_down = 1;
+	}
+	if (App->input->controller_1.left_joystick.y < -0.25)
+	{
+		joystick_up = 1;
+	}
 
-		if (App->input->controller_1.right_joystick.x != 0 && App->input->controller_1.right_joystick.y != 0)
-		{
-			//calculate angle
-			joystick_angle = atan2(App->input->controller_1.right_joystick.y, App->input->controller_1.right_joystick.x);
-		}
+	if (App->input->controller_1.right_joystick.x != 0 && App->input->controller_1.right_joystick.y != 0)
+	{
+		//calculate angle
+		joystick_angle = atan2(App->input->controller_1.right_joystick.y, App->input->controller_1.right_joystick.x);
+	}
+
 
 		if (App->input->GetKey(SDL_SCANCODE_W) == KEY_DOWN|| joystick_up || App->input->controller_1.jump)
 		{
@@ -113,7 +130,10 @@ bool j1Player::Update(float dt)
 			
 		}
 
-		if (App->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT || joystick_right)
+	if (App->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT || joystick_right)
+	{
+		position.x += speed;
+		if (current_animation != &right)
 		{
 			b2Vec2 speedo;
 			speedo.x = speed;
@@ -140,21 +160,34 @@ bool j1Player::Update(float dt)
 				left.Reset();
 				current_animation = &left;
 			}
-
 		}
 
+	}
 
 
-		if ((App->input->GetKey(SDL_SCANCODE_D) == KEY_IDLE)
-			&& (App->input->GetKey(SDL_SCANCODE_A) == KEY_IDLE) && joystick_left == false && joystick_right == false)
+	if (App->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT || joystick_left)
+	{
+		position.x -= speed;
+		if (current_animation != &left)
 		{
-			current_animation = &idle;
+			left.Reset();
+			current_animation = &left;
 		}
-		if (App->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT
-			&& App->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT && joystick_left == false && joystick_right == false)
-		{
-			current_animation = &idle;
-		}
+
+	}
+
+
+
+	if ((App->input->GetKey(SDL_SCANCODE_D) == KEY_IDLE)
+		&& (App->input->GetKey(SDL_SCANCODE_A) == KEY_IDLE) && joystick_left == false && joystick_right == false)
+	{
+		current_animation = &idle;
+	}
+	if (App->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT
+		&& App->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT && joystick_left == false && joystick_right == false)
+	{
+		current_animation = &idle;
+	}
 
 	
 
@@ -169,18 +202,31 @@ bool j1Player::Update(float dt)
 
 		player->TateQuieto();
 	// Draw everything --------------------------------------
-	
-		App->render->Blit(sprites, position.x, position.y);
-	//Draw HUD(lifes / powerups)---------------------------------
 
 	
+	App->render->Blit(sprites, position.x, position.y);
+//Draw HUD(lifes / powerups)---------------------------------
 
-	return true;
+	
 
-	}
+return true;
+
+}
 
 void j1Player::OnCollision(Collider* c1, Collider* c2)
 {
 
+}
+
+bool j1Player::Load(const pugi::xml_node& savegame) {
+	bool ret = true;
+
+	return ret;
+}
+
+bool j1Player::Save(const pugi::xml_node& savegame) {
+	bool ret = true;
+
+	return ret;
 }
 

@@ -23,12 +23,12 @@
   </input>
 
   <window>
-    <fullscreen value="false"/>
-    <borderless value="false"/>
+    <fullscreen value="true"/>
+    <borderless value="true"/>
     <resizable value="false"/>
     <fullscreen_window value="false"/>
-    <width value="1024"/>
-    <height value="768"/>
+    <width value="120"/>
+    <height value="1080"/>
     <scale value="1"/>
     <name value="Game Dev 1 Config"/>
   </window>
@@ -50,6 +50,6 @@
   </audio>
 
   <scene>
-    
+    <maps a="" b=""/>
   </scene>
 </config>
