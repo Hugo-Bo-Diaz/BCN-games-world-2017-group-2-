@@ -10,8 +10,9 @@ public:
 	j1FadeToBlack();
 	~j1FadeToBlack();
 
+	bool Awake(pugi::xml_node data_node);
 	bool Start();
-	bool Update();
+	bool Update(float dt);
 	bool FadeToBlack(j1Module* module_off, j1Module* module_on, float time = 1.0f);
 	bool IsFading() const;
 

@@ -15,6 +15,12 @@ j1FadeToBlack::j1FadeToBlack()
 j1FadeToBlack::~j1FadeToBlack()
 {}
 
+bool j1FadeToBlack::Awake(pugi::xml_node data_node) {
+	bool ret = true;
+
+	return ret;
+}
+
 // Load assets
 bool j1FadeToBlack::Start()
 {
@@ -24,7 +30,7 @@ bool j1FadeToBlack::Start()
 }
 
 // Update: draw background
-bool j1FadeToBlack::Update()
+bool j1FadeToBlack::Update(float dt)
 {
 	if(current_step == fade_step::none)
 		return true;
