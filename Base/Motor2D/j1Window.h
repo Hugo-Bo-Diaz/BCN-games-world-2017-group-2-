@@ -48,14 +48,18 @@ public:
 	//The surface contained by the window
 	SDL_Surface* screen_surface;
 
+
+	uint		width;
+	uint		height;
+	uint		scale;
+  
 	//Camera things?
 	fPoint Res;
 
 private:
 	p2SString	title;
-	uint		width;
-	uint		height;
-	uint		scale;
+
+
 };
 
 #endif // __j1WINDOW_H__

@@ -11,6 +11,15 @@
     <num_keys value="352"/>
     <num_mouse_buttons value="5"/>
     <last_keys_pressed_buffer value="50"/>
+    <controls>
+      <change_character value =""/>
+      <slam_big value =""/>
+      <jump value =""/>
+      <anchor_big value =""/>
+      <grab_big value =""/>
+      <whip_small value =""/>
+      <slide_small value =""/>
+    </controls>
   </input>
 
   <window>

@@ -6,8 +6,11 @@
 	<audio>
 		<master_volume value="64" />
 	</audio>
+	<map />
 	<scene />
+	<:anonymous />
+	<:anonymous />
 	<renderer>
-		<camera x="370" y="160" />
+		<camera x="0" y="0" />
 	</renderer>
 </savegame>
