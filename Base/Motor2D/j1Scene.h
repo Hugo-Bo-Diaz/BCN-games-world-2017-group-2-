@@ -10,6 +10,7 @@ class j1Scene : public j1Module
 {
 public:
 
+	int counter = 0;
 	j1Scene();
 
 	// Destructor

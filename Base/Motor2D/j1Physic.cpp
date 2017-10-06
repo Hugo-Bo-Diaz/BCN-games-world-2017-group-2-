@@ -39,27 +39,49 @@ bool j1Physics::Start()
 	int y = SCREEN_HEIGHT / 1.5f;
 	int diameter = SCREEN_WIDTH / 2;
 
-	b2BodyDef body;
-	body.type = b2_staticBody;
-	body.position.Set(PIXEL_TO_METERS(x), PIXEL_TO_METERS(y));
+	//b2BodyDef body;
+	//body.type = b2_staticBody;
+	//body.position.Set(PIXEL_TO_METERS(x), PIXEL_TO_METERS(y));
 
-	b2Body* b = world->CreateBody(&body);
+ //   b2Body* b = world->CreateBody(&body);
 
-	b2CircleShape shape;
-	shape.m_radius = PIXEL_TO_METERS(diameter) * 0.5f;
+ //   b2CircleShape shapec;
+	//shapec.m_radius = PIXEL_TO_METERS(diameter) * 0.5f;
+
+	//b2FixtureDef fixture1;
+	//fixture1.shape = &shapec;
+	//b->CreateFixture(&fixture1);
 
 
-	//b2PolygonShape shape;
-	//shape.SetAsBox(PIXEL_TO_METERS(diameter) * 0.5f, (PIXEL_TO_METERS(diameter) * 0.5f) / 2);
+	//PhysBody* physbody_s = new PhysBody;	
+	//physbody_s->body = b;
+	//physbody_s->module = App->scene;
+	//b->SetUserData(physbody_s);
 
-	b2FixtureDef fixture;
-	fixture.shape = &shape;
-	b->CreateFixture(&fixture);
 
-	PhysBody* physbody_s = new PhysBody;	
-	physbody_s->body = b;
-	physbody_s->module = App->scene;
-	b->SetUserData(physbody_s);
+
+
+
+    b2BodyDef body2;
+	body2.type = b2_staticBody;
+	body2.position.Set(PIXEL_TO_METERS(x), PIXEL_TO_METERS(y));
+
+	b2Body*c = world->CreateBody(&body2);
+
+	b2PolygonShape shapep;
+	shapep.SetAsBox(PIXEL_TO_METERS(diameter), (PIXEL_TO_METERS(diameter) * 0.5f) / 2);
+
+	b2FixtureDef fixture2;
+	fixture2.shape = &shapep;
+	c->CreateFixture(&fixture2);
+
+	PhysBody* physbody_c = new PhysBody;
+	physbody_c->body = c;
+	physbody_c->module = App->scene;
+	c->SetUserData(physbody_c);
+
+
+
 
 	return true;
 }
