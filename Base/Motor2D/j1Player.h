@@ -14,21 +14,19 @@ public:
 	j1Player();
 	~j1Player();
 
-	//POWERUPS
-	/*
-	0-> boots
-	1-> rifle
-	2-> bullets
-	*/
-
 	int checkpoint = 0;
 
 	int timer = 0;
 	bool itstime;
+
+	bool Awake(const pugi::xml_node& config);
 	bool Start();
-	bool Update();
+	bool Update(float dt);
 	bool CleanUp();
 	void OnCollision(Collider* c1, Collider* c2);
+
+	bool Load(const pugi::xml_node& config);
+	bool Save(const pugi::xml_node& config);
 
 public:
 

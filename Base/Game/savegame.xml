@@ -8,9 +8,10 @@
 	</audio>
 	<map />
 	<scene />
-	<:anonymous />
-	<:anonymous />
+	<player />
+	<fadetoblack />
+	<physics />
 	<renderer>
-		<camera x="0" y="0" />
+		<camera x="260" y="0" />
 	</renderer>
 </savegame>

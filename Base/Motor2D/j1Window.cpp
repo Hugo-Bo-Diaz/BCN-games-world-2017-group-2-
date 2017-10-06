@@ -20,7 +20,7 @@ j1Window::~j1Window()
 }
 
 // Called before render is available
-bool j1Window::Awake(pugi::xml_node* config)
+bool j1Window::Awake(const pugi::xml_node& config)
 {
 	LOG("Init SDL window & surface");
 	bool ret = true;
@@ -35,29 +35,36 @@ bool j1Window::Awake(pugi::xml_node* config)
 		//Create window
 		Uint32 flags = SDL_WINDOW_SHOWN;
 		
-		width = config->child("width").attribute("value").as_int();
-		height = config->child("height").attribute("value").as_int();
-		scale = config->child("scale").attribute("value").as_int();
+		width = config.child("width").attribute("value").as_int();
+		height = config.child("height").attribute("value").as_int();
+		
+		SDL_Rect* r = new SDL_Rect;
+		SDL_GetDisplayBounds(0, r);
+		width = r->w;
+		height = r->h;
+		delete r;
+
+		scale = config.child("scale").attribute("value").as_int();
 
 		Res.x = width;
 		Res.y = height;
 
-		if(config->child("fullscreen").attribute("value").as_bool())
+		if(config.child("fullscreen").attribute("value").as_bool())
 		{
 			flags |= SDL_WINDOW_FULLSCREEN;
 		}
 
-		if(config->child("borderless").attribute("value").as_bool())
+		if(config.child("borderless").attribute("value").as_bool())
 		{
 			flags |= SDL_WINDOW_BORDERLESS;
 		}
 
-		if(config->child("resizable").attribute("value").as_bool())
+		if(config.child("resizable").attribute("value").as_bool())
 		{
 			flags |= SDL_WINDOW_RESIZABLE;
 		}
 
-		if(config->child("fullscreen_window").attribute("value").as_bool())
+		if(config.child("fullscreen_window").attribute("value").as_bool())
 		{
 			flags |= SDL_WINDOW_FULLSCREEN_DESKTOP;
 		}
@@ -77,7 +84,7 @@ bool j1Window::Awake(pugi::xml_node* config)
 			// TODO 1.4: Read the title of the app from the XML
 			// and set directly the window title using SetTitle()
 			
-			SetTitle(config->child("name").attribute("value").as_string());
+			SetTitle(config.child("name").attribute("value").as_string());
 
 		}
 	}
@@ -94,6 +101,7 @@ bool j1Window::PreUpdate()
 
 	return ret;
 }
+
 // Called before quitting
 bool j1Window::CleanUp()
 {

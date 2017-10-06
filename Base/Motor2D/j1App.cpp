@@ -22,7 +22,7 @@
 j1App::j1App(int argc, char* args[]) : argc(argc), args(args)
 {
 	frames = 0;
-
+ 
 
 	input = new j1Input();
 	win = new j1Window();
@@ -90,7 +90,7 @@ bool j1App::Awake()
 		// If the section with the module name exist in config.xml, fill the pointer with the address of a valid xml_node
 		// that can be used to read all variables from that section. Send nullptr if the section does not exist in config.xml
 	
-		ret = item->data->Awake(&root_node.child(item->data->name.GetString()));
+		ret = item->data->Awake(root_node.child(item->data->name.GetString()));
 		item = item->next;
 	}
 
@@ -155,7 +155,7 @@ bool j1App::LoadConfig()
 		app_config = root_node.child("app");
 	}
 
-	/*// TODO 2.3 Load savegame document and nodes
+	// TODO 2.3 Load savegame document and nodes
 	pugi::xml_document savegame_doc;
 
 	result = savegame_doc.load_file("savegame.xml");
@@ -170,7 +170,8 @@ bool j1App::LoadConfig()
 	}
 	else {
 		root_savegame_node = savegame_doc.child("savegame");
-	}*/
+	}
+
 	return ret;
 }
 
@@ -324,7 +325,7 @@ bool j1App::Load() {
 
 	for (item = modules.start; item != NULL && ret == true; item = item->next)
 	{
-		ret = item->data->Load(&root_savegame_node.child(item->data->name.GetString()));
+		ret = item->data->Load(root_savegame_node.child(item->data->name.GetString()));
 	}
 
 	return ret;
@@ -348,7 +349,7 @@ const bool j1App::Save() {
 	for (item = modules.start ; item != NULL && ret == true; item = item->next)
 	{
 		root_savegame_node.append_child(item->data->name.GetString());	//Creem el fill del modul al que estem, des del node arrel
-		ret = item->data->Save(&root_savegame_node.child(item->data->name.GetString()));	//Cridem la funcio
+		ret = item->data->Save(root_savegame_node.child(item->data->name.GetString()));	//Cridem la funcio
 	}
 
 	savegame_doc.save_file("savegame.xml");	//Guardem el arxiu sencer, com a nou xml que sobreescriura el xml anterior (a menys que fem un sistema de noms per saves)
