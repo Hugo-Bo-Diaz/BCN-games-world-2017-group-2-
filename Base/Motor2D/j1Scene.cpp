@@ -33,11 +33,9 @@ bool j1Scene::Start()
 	bool ret = true;
 	//img = App->tex->Load("textures/test.png");
 	// LOAD MAPS AND MUSIC HERE
-	if (ret == true) ret = App->map->Load("TMX tests/hexagonal-mini.tmx");
-	if (ret == true) ret = App->map->Load("TMX tests/isometric_grass_and_water.tmx");
-	if (ret == true) ret = App->map->Load("TMX tests/orthogonal-outside.tmx");
+	//if (ret == true) ret = App->map->Load("Poner Direccion de Mapa aquí");
 	if (ret == true) ret = App->map->Load("TMX tests/sewers.tmx");
-	if (ret == true) ret = App->map->Load("TMX tests/Trial.tmx");
+	
 	if (ret == true) ret = App->audio->PlayMusic("audio/music/music_sadpiano.ogg");
 	
 	return ret;
@@ -83,6 +81,22 @@ bool j1Scene::Update(float dt)
 
 	if (App->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_REPEAT)
 		App->render->camera.x += 10;
+
+	if (App->input->GetKey(SDL_SCANCODE_O) == KEY_REPEAT) {
+		App->win->Res.y += (10 * (App->win->Res.y / App->win->Res.x));
+		App->win->Res.x += 10;
+	}
+	if (App->input->GetKey(SDL_SCANCODE_P) == KEY_REPEAT) {
+		App->win->Res.y -= (10 * (App->win->Res.y / App->win->Res.x));
+		App->win->Res.x -= 10;
+	}
+	
+	/*// Change Camera 
+	if (App->input->GetKey(SDL_SCANCODE_O) == KEY_DOWN)
+		App->win->UpScale();
+
+	if (App->input->GetKey(SDL_SCANCODE_P) == KEY_DOWN)
+		App->win->DownScale();*/
 
 	//App->render->Blit(img, 0, 0);
 	App->map->Draw();
