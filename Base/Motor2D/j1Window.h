@@ -2,7 +2,7 @@
 #define __j1WINDOW_H__
 
 #include "j1Module.h"
-
+#include "p2Point.h"
 
 
 struct SDL_Window;
@@ -19,6 +19,9 @@ public:
 
 	// Called before render is available
 	bool Awake(pugi::xml_node* config);
+
+	// Called before Update
+	bool PreUpdate();
 
 	// Called before quitting
 	bool CleanUp();
@@ -44,6 +47,9 @@ public:
 
 	//The surface contained by the window
 	SDL_Surface* screen_surface;
+
+	//Camera things?
+	fPoint Res;
 
 private:
 	p2SString	title;
