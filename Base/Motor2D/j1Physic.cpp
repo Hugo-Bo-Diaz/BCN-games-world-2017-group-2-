@@ -31,57 +31,20 @@ bool j1Physics::Start()
 {
 	LOG("Creating Physics 2D environment");
 
-	world = new b2World(b2Vec2(GRAVITY_X, -GRAVITY_Y));
+	world = new b2World(b2Vec2(GRAVITY_X, 14));
 	// TODO 3: You need to make ModulePhysics class a contact listener
+
 	world->SetContactListener(App->physic);
+
 	// big static circle as "ground" in the middle of the screen
 	int x = 0;
 	int y = SCREEN_HEIGHT / 1.5f;
 	int diameter = SCREEN_WIDTH / 2;
 
-	//b2BodyDef body;
-	//body.type = b2_staticBody;
-	//body.position.Set(PIXEL_TO_METERS(x), PIXEL_TO_METERS(y));
-
- //   b2Body* b = world->CreateBody(&body);
-
- //   b2CircleShape shapec;
-	//shapec.m_radius = PIXEL_TO_METERS(diameter) * 0.5f;
-
-	//b2FixtureDef fixture1;
-	//fixture1.shape = &shapec;
-	//b->CreateFixture(&fixture1);
-
-
-	//PhysBody* physbody_s = new PhysBody;	
-	//physbody_s->body = b;
-	//physbody_s->module = App->scene;
-	//b->SetUserData(physbody_s);
 
 	CreateCircle(x, y, diameter * 0.5f, b2_staticBody);
 
-
-
-    b2BodyDef body2;
-	body2.type = b2_staticBody;
-	body2.position.Set(PIXEL_TO_METERS(x), PIXEL_TO_METERS(y));
-
-	b2Body*c = world->CreateBody(&body2);
-
-	b2PolygonShape shapep;
-	shapep.SetAsBox(PIXEL_TO_METERS(diameter), (PIXEL_TO_METERS(diameter) * 0.5f) / 2);
-
-	b2FixtureDef fixture2;
-	fixture2.shape = &shapep;
-	c->CreateFixture(&fixture2);
-
-	PhysBody* physbody_c = new PhysBody;
-	physbody_c->body = c;
-	physbody_c->module = App->scene;
-	c->SetUserData(physbody_c);
-
-
-
+	CreateRectangle(x, y, diameter*2, diameter/2, b2_staticBody);
 
 	return true;
 }
@@ -128,10 +91,10 @@ PhysBody* j1Physics::CreateCircle(int x, int y, int radius,b2BodyType body_type 
 	return pbody;
 }
 
-PhysBody* j1Physics::CreateRectangle(int x, int y, int width, int height)
+PhysBody* j1Physics::CreateRectangle(int x, int y, int width, int height, b2BodyType body_type)
 {
 	b2BodyDef body;
-	body.type = b2_dynamicBody;
+	body.type = body_type;
 	body.position.Set(PIXEL_TO_METERS(x), PIXEL_TO_METERS(y));
 
 	b2Body* b = world->CreateBody(&body);
@@ -154,10 +117,10 @@ PhysBody* j1Physics::CreateRectangle(int x, int y, int width, int height)
 	return pbody;
 }
 
-PhysBody* j1Physics::CreateChain(int x, int y, int* points, int size)
+PhysBody* j1Physics::CreateChain(int x, int y, int* points, int size, b2BodyType body_type)
 {
 	b2BodyDef body;
-	body.type = b2_dynamicBody;
+	body.type = body_type;
 	body.position.Set(PIXEL_TO_METERS(x), PIXEL_TO_METERS(y));
 
 	b2Body* b = world->CreateBody(&body);
@@ -316,6 +279,26 @@ bool PhysBody::Contains(int x, int y) const
 	return ret;
 }
 
+void PhysBody::SetVelocity(b2Vec2 velocity_) 
+{
+	b2Vec2 velocity;
+	velocity.x = PIXEL_TO_METERS(velocity_.x);
+	velocity.y = body->GetLinearVelocity().y;
+	body->SetLinearVelocity(velocity);
+	
+}
+void PhysBody::ApplyForce(b2Vec2 force)
+{
+	body->ApplyForceToCenter(force, true);
+}
+void PhysBody::TateQuieto()
+{
+	b2Vec2 quietoparau;
+	quietoparau.x = body->GetPosition().x;
+	quietoparau.y = body->GetPosition().y;
+	body->SetTransform(quietoparau, 0);
+}
+
 int PhysBody::RayCast(int x1, int y1, int x2, int y2, float& normal_x, float& normal_y) const
 {
 	// TODO 2: Write code to test a ray cast between both points provided. If not hit return -1
@@ -372,6 +355,8 @@ void j1Physics::BeginContact(b2Contact* contact)
 	}
 	//LLamar al "OnCollision" de los módulos que contengan las diferentes strucs
 }
+
+
 // TODO 3
 
 // TODO 7: Call the listeners that are not NULL

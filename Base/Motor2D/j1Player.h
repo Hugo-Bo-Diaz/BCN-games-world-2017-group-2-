@@ -26,9 +26,10 @@ public:
 	int timer = 0;
 	bool itstime;
 	bool Start();
-	bool Update();
+	bool Update(float);
 	bool CleanUp();
 	void OnCollision(Collider* c1, Collider* c2);
+
 
 public:
 
@@ -43,10 +44,15 @@ public:
 	Animation special_2;
 	Animation special_3;
 
-	fPoint position;
+	fPoint position; // en desuso
+	PhysBody* player;
 
 	Collider* col;
 	bool destroyed = false;
+
+	bool moving = false;
+
+	float jump_force;
 
 	int font_score = -1;
 	uint audio_shot;
@@ -65,6 +71,7 @@ public:
 
 	bool death = false;
 
+	float speed;
 	int god_mode = 0;
 };
 

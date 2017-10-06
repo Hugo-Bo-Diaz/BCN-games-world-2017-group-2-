@@ -26,9 +26,17 @@ public:
 	float GetRotation() const;
 	bool Contains(int x, int y) const;
 	int RayCast(int x1, int y1, int x2, int y2, float& normal_x, float& normal_y) const;
+	void SetVelocity(b2Vec2);
+	void ApplyForce(b2Vec2);
+	void TateQuieto();
+
+	
 
 public:
 	int width, height;
+
+	int x, y;
+
 	b2Body* body;
 	j1Scene* module = nullptr;
 	// TODO 6: Add a pointer to a module that might want to listen to a collision from this body
@@ -49,9 +57,9 @@ public:
 	bool CleanUp();
 
 	PhysBody* CreateCircle(int x, int y, int radius, b2BodyType body_type);
-	PhysBody* CreateRectangle(int x, int y, int width, int height);
-	PhysBody* CreateRectangleSensor(int x, int y, int width, int height);
-	PhysBody* CreateChain(int x, int y, int* points, int size);
+	PhysBody* CreateRectangle(int x, int y, int width, int height, b2BodyType body_type);
+	PhysBody* CreateRectangleSensor(int x, int y, int width, int height, b2BodyType body_type);
+	PhysBody* CreateChain(int x, int y, int* points, int size, b2BodyType body_type);
 
 	void BeginContact(b2Contact*);
 
