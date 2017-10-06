@@ -9,6 +9,7 @@
 #include "j1Map.h"
 #include "j1Scene.h"
 
+
 j1Scene::j1Scene() : j1Module()
 {
 	name.create("scene");
@@ -33,11 +34,13 @@ bool j1Scene::Start()
 	bool ret = true;
 	//img = App->tex->Load("textures/test.png");
 	// LOAD MAPS AND MUSIC HERE
-	//if (ret == true) ret = App->map->Load("Poner Direccion de Mapa aquí");
-	if (ret == true) ret = App->map->Load("TMX tests/sewers.tmx");
+
+	if (ret == true) ret = App->map->Load("TMX tests/Trial.tmx");
+	//if (ret == true) ret = App->map->Load("Poner Direccion de Mapa aquÃ­");
 	
 	if (ret == true) ret = App->audio->PlayMusic("audio/music/music_sadpiano.ogg");
 	
+
 	return ret;
 }
 
@@ -82,6 +85,13 @@ bool j1Scene::Update(float dt)
 	if (App->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_REPEAT)
 		App->render->camera.x += 10;
 
+
+	if (App->input->GetKey(SDL_SCANCODE_1) == KEY_DOWN)
+	{
+		App->physic->CreateCircle(10, 10, 25);
+		// TODO 8: Make sure to add yourself as collision callback to the circle you creates
+	}
+
 	if (App->input->GetKey(SDL_SCANCODE_O) == KEY_REPEAT) {
 		App->win->Res.y += (10 * (App->win->Res.y / App->win->Res.x));
 		App->win->Res.x += 10;
@@ -97,6 +107,7 @@ bool j1Scene::Update(float dt)
 
 	if (App->input->GetKey(SDL_SCANCODE_P) == KEY_DOWN)
 		App->win->DownScale();*/
+
 
 	//App->render->Blit(img, 0, 0);
 	App->map->Draw();
@@ -134,4 +145,9 @@ bool j1Scene::CleanUp()
 	LOG("Freeing scene");
 
 	return true;
+}
+//
+void j1Scene::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
+{
+	LOG("COLLISION!");
 }

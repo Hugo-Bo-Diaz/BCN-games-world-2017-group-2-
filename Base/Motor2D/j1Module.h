@@ -9,7 +9,9 @@
 #include "p2SString.h"
 #include "PugiXml\src\pugixml.hpp"
 
+
 class j1App;
+class PhysBody;
 
 class j1Module
 {
@@ -17,6 +19,7 @@ public:
 
 	j1Module() : active(false)
 	{}
+
 
 	void Init()
 	{
@@ -69,6 +72,8 @@ public:
 	virtual bool Save(pugi::xml_node* savegame) {
 		return true;
 	}
+
+	virtual void OnCollision(PhysBody*, PhysBody*) { }
 
 public:
 
