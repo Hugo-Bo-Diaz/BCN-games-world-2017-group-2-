@@ -4,31 +4,26 @@
 <config>
 
   <app>
-  
+
   </app>
-  
+
   <input>
     <num_keys value="352"/>
     <num_mouse_buttons value="5"/>
     <last_keys_pressed_buffer value="50"/>
     <controls>
-      <change_character value =""/>
-      <slam_big value =""/>
-      <jump value =""/>
-      <anchor_big value =""/>
-      <grab_big value =""/>
-      <whip_small value =""/>
-      <slide_small value =""/>
+      <grab_big value=""/>
+      <whip_small value=""/>
     </controls>
   </input>
 
   <window>
-    <fullscreen value="true"/>
-    <borderless value="true"/>
+    <fullscreen value="false"/>
+    <borderless value="false"/>
     <resizable value="false"/>
     <fullscreen_window value="false"/>
-    <width value="120"/>
-    <height value="1080"/>
+    <width value="1024"/>
+    <height value="768"/>
     <scale value="1"/>
     <name value="Game Dev 1 Config"/>
   </window>
@@ -38,7 +33,7 @@
   </renderer>
 
   <textures>
-    
+
   </textures>
 
   <audio>
@@ -49,7 +44,31 @@
     <repeat value="0"/>
   </audio>
 
-  <scene>
-    <maps a="" b=""/>
-  </scene>
+  <player>
+    <physics>
+      <max_speed value= "2050"/>
+      <initial_force value= ""/>
+      <jumpsquat value= ""/>
+      <jump_force value= "-250"/>
+      <friction value= ""/>
+      <air_restriction value= ""/>
+
+      <slide_force value= ""/>
+      <grab_velocity value= ""/>
+      <slam_velocity value= ""/>
+      <anchor_time value= ""/>
+    </physics>
+  </player>
+
+  <scenes>
+      <map source="TMX tests/Trial.tmx" draw="false"/>
+  </scenes>
+  
+  <physics>
+    <gravity x= "0" y="14"/>
+    <wind_force value="-1.4"/>
+    <test_platform w="10000" h="200"/>
+    <set_airmovement mode="1"/>
+  </physics>
+
 </config>
