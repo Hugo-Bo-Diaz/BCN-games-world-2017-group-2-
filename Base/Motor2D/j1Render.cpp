@@ -46,6 +46,11 @@ bool j1Render::Awake(const pugi::xml_node& config)
 		camera.h = App->win->screen_surface->h;
 		camera.x = config.child("camera").attribute("x").as_int();
 		camera.y = config.child("camera").attribute("y").as_int();
+
+		settings.min_sep = config.child("cam_settings").attribute("min_sep").as_uint();
+		settings.max_sep = config.child("cam_settings").attribute("max_sep").as_uint();
+		settings.scaling_step = config.child("cam_settings").attribute("scaling_step").as_uint();
+		settings.screen_ratio = App->win->width / App->win->height;
 	}
 
 	return ret;
@@ -57,19 +62,31 @@ bool j1Render::Start()
 	LOG("render start");
 	// back background
 	SDL_RenderGetViewport(renderer, &viewport);
+
+	last_vec.Set(0, 0);
 	return true;
 }
 
 // Called each loop iteration
 bool j1Render::PreUpdate()
 {
+	bool ret = true;
+
 	SDL_RenderClear(renderer);
-	iPoint sida;
-	//App->player->player->GetPosition(sida.x, sida.y );
+
 	
 	camera.x = -App->player->characters[0].real_position.x + 500;
+  iPoint sida;
+  sida.x = App->player->characters[0].real_position.x;
+  sida.y = App->player->characters[0].real_position.y;
 
-	return true;
+	iPoint algo;
+  algo.x = App->player->characters[1].real_position.x;
+  algo.y = App->player->characters[1].real_position.y;
+
+	ret = SetCamDistance({ (float)(sida.x - algo.x), (float)(sida.y - algo.y) });
+
+	return ret;
 }
 
 bool j1Render::Update(float dt)
@@ -252,6 +269,31 @@ bool j1Render::DrawCircle(int x, int y, int radius, Uint8 r, Uint8 g, Uint8 b, U
 		LOG("Cannot draw quad to screen. SDL_RenderFillRect error: %s", SDL_GetError());
 		ret = false;
 	}
+
+	return ret;
+}
+
+bool j1Render::SetCamDistance(const b2Vec2& curr_vec) {
+	bool ret = true;
+
+	if (curr_vec.Length() > settings.min_sep && curr_vec.Length() < settings.max_sep && curr_vec.Length() > last_vec.Length()) {
+		App->win->Res.y += settings.scaling_step;
+		App->win->Res.x += settings.scaling_step * App->win->Res.x / App->win->Res.y;
+		camera.y += settings.scaling_step;
+		camera.x += settings.scaling_step * App->win->Res.x / App->win->Res.y;
+		camera.h -= settings.scaling_step;
+		camera.w -= settings.scaling_step * App->win->Res.x / App->win->Res.y;
+	}
+	else if (curr_vec.Length() > settings.min_sep && curr_vec.Length() < settings.max_sep && curr_vec.Length() < last_vec.Length()) {
+		App->win->Res.y -= settings.scaling_step;
+		App->win->Res.x -= settings.scaling_step * App->win->Res.x / App->win->Res.y;
+		camera.y -= settings.scaling_step;
+		camera.x -= settings.scaling_step * App->win->Res.x / App->win->Res.y;
+		camera.h += settings.scaling_step;
+		camera.w += settings.scaling_step * App->win->Res.x / App->win->Res.y;
+	}
+
+	last_vec = curr_vec;
 
 	return ret;
 }
