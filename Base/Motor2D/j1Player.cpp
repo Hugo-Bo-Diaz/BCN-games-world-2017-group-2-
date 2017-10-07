@@ -9,6 +9,7 @@
 #include "j1Audio.h"
 #include "SDL/include/SDL_timer.h"
 #include "j1Physic.h"
+#include "j1Scene.h"
 
 #include<stdio.h>
 #include<math.h>
@@ -207,56 +208,16 @@ bool j1Player::Update(float dt)
 			}
 		}
 
-		if ((happyness * 100) / maximum_happyness >= 66)
-			happy = true;
-		else if ((happyness * 100) / maximum_happyness >= 33)
-			neutral = true;
-		else if ((happyness * 100) / maximum_happyness < 33 && (happyness * 100) / maximum_happyness > 1)
-			sad = true;
-
-		if (sad)
-		{
-			happy = false;
-			neutral = false;
-		}
-		else if (happy)
-		{
-			sad = false;
-			neutral = false;
-		}
-		else if (neutral)
-		{
-			sad = false;
-			happy = false;
-		}
-
-		if (!characters[1].player_anchor)
-		{
-			int x, y;
-			characters[1].player_anchor->GetPosition(x, y);
-			characters[1].real_position.x = x;
-			characters[1].real_position.y = y;
-		}
-		else
-		{
-			int x, y;
-			characters[1].player->GetPosition(x, y);
-			characters[1].real_position.x = x;
-			characters[1].real_position.y = y;
-		}
-	
+		UpdtHappy();
 	//App->render->Blit(sprites, position.x, position.y);
 
 //Draw HUD(lifes / powerups)---------------------------------
-		if (happyness == 10)
-		{
-			LOG("");
-		}
 
 
 return true;
 
 }
+
 
 void j1Player::OnCollision(PhysBody* player, PhysBody* other)
 {
@@ -448,9 +409,40 @@ bool j1Player::LoadSprites(const pugi::xml_node& sprite_node) {
 	return ret;
 }
 
+void j1Player::UpdtHappy() {
+	// Happyness -> Value     /////    Happiness -> Type of face show (UI)
+	if ((happyness * 100) / maximum_happyness >= 66)
+		happiness = 0; 
+	else if ((happyness * 100) / maximum_happyness >= 33)
+		happiness = 1;
+	else if ((happyness * 100) / maximum_happyness < 33 && (happyness * 100) / maximum_happyness > 1)
+		happiness = 2;
+	else {
+		App->scene->ResetLoad();
+	}
+
+	if (!characters[1].player_anchor)
+	{
+		int x, y;
+		characters[1].player_anchor->GetPosition(x, y);
+		characters[1].real_position.x = x;
+		characters[1].real_position.y = y;
+	}
+	else
+	{
+		int x, y;
+		characters[1].player->GetPosition(x, y);
+		characters[1].real_position.x = x;
+		characters[1].real_position.y = y;
+	}
+
+}
+
+
 bool j1Player::LoadProperties(const pugi::xml_node& property_node) {
 	
 	bool ret = true;
+	// Cargar cosas Happy
 	pugi::xml_node char_node = property_node.child("char");
 
 	for (int i = 0; char_node.attribute("name").as_string() != ""; i++) {

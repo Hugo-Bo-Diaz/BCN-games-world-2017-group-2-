@@ -83,6 +83,8 @@ public:
 
 	void AnchorEnd();
 
+	void UpdtHappy();
+
 public:
 	bool character_controll = true; //true para el gordete, false para la flaquita
 
@@ -93,10 +95,7 @@ public:
 
 
     int happyness = 0;//NEW VARIABLE
-	bool happy = true;
-	bool neutral = false;
-	bool sad = false;
-	bool restart = false;
+	int happiness = 0;
 
 	float distance;
 	float time_taker;
