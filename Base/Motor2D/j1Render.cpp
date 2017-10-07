@@ -74,11 +74,15 @@ bool j1Render::PreUpdate()
 
 	SDL_RenderClear(renderer);
 
-	iPoint sida;
-	App->player->characters[0].player->GetPosition(sida.x, sida.y);
+	
+	camera.x = -App->player->characters[0].real_position.x + 500;
+  iPoint sida;
+  sida.x = App->player->characters[0].real_position.x;
+  sida.y = App->player->characters[0].real_position.y;
 
 	iPoint algo;
-	App->player->characters[1].player->GetPosition(algo.x, algo.y);
+  algo.x = App->player->characters[1].real_position.x;
+  algo.y = App->player->characters[1].real_position.y;
 
 	ret = SetCamDistance({ (float)(sida.x - algo.x), (float)(sida.y - algo.y) });
 

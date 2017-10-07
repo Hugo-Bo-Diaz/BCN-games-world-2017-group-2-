@@ -25,33 +25,22 @@ j1Player::~j1Player()
 bool j1Player::Awake(const pugi::xml_node& config)
 {
 	bool ret = true;
+	characters[0].real_position.x = 30;//READ HERE FROM XML
+	characters[0].real_position.y = 0;//READ HERE FROM XML
 
+	characters[0].player = App->physic->CreateRectangle(characters[0].real_position.x, characters[0].real_position.y, 30, 50, b2_dynamicBody, true, PLAYER);
+
+	characters[0].jump_force = config.child("physics").child("jump_force").attribute("value").as_float();
+	characters[0].speed = config.child("physics").child("max_speed").attribute("value").as_float(); //cambiar con xml
 	// Cargar aqui los xmls de sprites y de posicion de personajes en el mapa
 	// Propiedades por xml...
 	LOG("Loading player");
+	characters[0].player_sliding = App->physic->CreateRectangle(1000, 1000, 30, 25, b2_dynamicBody, true, PLAYER);
+	characters[0].player_sliding->body->SetActive(false);
 
-	graphics = App->tex->Load("textures/test.png");
+	characters[1].player = App->physic->CreateRectangle(characters[0].real_position.x + 40, characters[0].real_position.y, 30, 50, b2_dynamicBody, true, PLAYER);
 
-	destroyed = false;
-	position.x = 30;//READ HERE FROM XML
-	position.y = 0;//READ HERE FROM XML
 
-	audio_shot = App->audio->LoadFx("gunsmoke/shotfx.wav");
-
-	//col = App->collision->AddCollider({(int)position.x, (int)position.y, 19, 28}, COLLIDER_PLAYER, this);
-	// idle animation
-	
-	idle.PushBack({ 4, 8, 19, 29 });
-	idle.PushBack({ 25, 8, 20, 29 });
-	idle.PushBack({ 48, 8, 19, 29 });
-	idle.PushBack({ 70, 8, 20, 29 });
-	idle.PushBack({ 91, 8, 21, 29 });
-	idle.speed = 0.2f;
-
-	player = App->physic->CreateRectangle(position.x, position.y, 30, 50, b2_dynamicBody, true, PLAYER);
-	
-	jump_force = config.child("physics").child("jump_force").attribute("value").as_float();
-	speed = config.child("physics").child("max_speed").attribute("value").as_float(); //cambiar con xml
 
 	return ret;
 }
@@ -72,10 +61,8 @@ bool j1Player::CleanUp()
 	/*App->audio->Unload(audio_shot);
 	
 	App->fonts->UnLoad(font_score);*/
-	App->tex->UnLoad(graphics);
+	App->tex->UnLoad(characters[0].graphics);
 
-	if (col != nullptr)
-		//col->to_delete = true;
 
 	return true;
 }
@@ -83,116 +70,110 @@ bool j1Player::CleanUp()
 // Update: draw background
 bool j1Player::Update(float dt)
 {
-	moving = false;
+	characters[0].moving = false;
 
-	joystick_left = 0;
-	joystick_right = 0;
 
-	if (App->input->controller_1.left_joystick.x > 0.25)
-	{
-		joystick_right = 1;
-	}
-	if (App->input->controller_1.left_joystick.x < -0.25)
-	{
-		joystick_left = 1;
-	}
-
-	joystick_down = 0;
-	joystick_up = 0;
-
-	if (App->input->controller_1.left_joystick.y > 0.25)
-	{
-		joystick_down = 1;
-	}
-	if (App->input->controller_1.left_joystick.y < -0.25)
-	{
-		joystick_up = 1;
-	}
-
-	if (App->input->controller_1.right_joystick.x != 0 && App->input->controller_1.right_joystick.y != 0)
-	{
-		//calculate angle
-		joystick_angle = atan2(App->input->controller_1.right_joystick.y, App->input->controller_1.right_joystick.x);
-	}
-
-	if (!jumping)
+	if (!characters[0].jumping)
 	{ 
-		if (App->input->GetKey(SDL_SCANCODE_W) == KEY_DOWN|| joystick_up || App->input->controller_1.jump)
+		if (App->input->GetKey(SDL_SCANCODE_W) == KEY_DOWN)
 		{
 			b2Vec2 jump_force_vector;
 			jump_force_vector.x = 0;
-			jump_force_vector.y = jump_force;
-			player->ApplyForce(jump_force_vector);
-			jumping = true;
+			jump_force_vector.y = characters[0].jump_force;
+			characters[0].player->ApplyForce(jump_force_vector);
+			characters[0].jumping = true;
 		}
 	}
 
-		if (App->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT || joystick_down)
+
+		if (App->input->GetKey(SDL_SCANCODE_B) == KEY_DOWN)
 		{
-			
+		
+			characters[0].sliding = true;
+			b2Vec2 position_;
+			position_ = characters[0].player->body->GetPosition();
+			characters[0].player->SetActive(false);
+			characters[0].player->SetPosition(10000, 10000);
+			characters[0].player_sliding->SetPosition(METERS_TO_PIXELS(position_.x), METERS_TO_PIXELS(position_.y)+ characters[0].player->height/4+5);
+			characters[0].player_sliding->SetActive(true);
+			b2Vec2 velocity;
+			if (characters[0].face_right)
+			velocity.x = characters[0].speed + 100;
+			else
+			velocity.x = -(characters[0].speed + 100);
+
+			velocity.y = 0;
+			characters[0].player_sliding->SetVelocity(velocity);
 		}
 
-		if (App->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT || joystick_right)
+		if (App->input->GetKey(SDL_SCANCODE_B) == KEY_UP)
+		{
+			characters[0].sliding = false;
+		
+			b2Vec2 position_;
+			position_ = characters[0].player_sliding->body->GetPosition();
+			characters[0].player_sliding->SetActive(false);
+			characters[0].player_sliding->SetPosition(10000, 10000);
+			characters[0].player->SetPosition(METERS_TO_PIXELS(position_.x), METERS_TO_PIXELS(position_.y)- characters[0].player_sliding->height);
+			characters[0].player->SetActive(true);
+			b2Vec2 velocity;
+			velocity.x = 0;
+			velocity.y = 0;
+			characters[0].player->SetVelocity(velocity);
+		}
+
+		if (App->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT)
 		{
 			b2Vec2 speedo;
-			speedo.x = speed;
+			speedo.x = characters[0].speed;
 			speedo.y = 0;
-			player->SetVelocity(speedo);
-			moving = true;
-			if (current_animation != &right)
-			{
-				right.Reset();
-				current_animation = &right;
-			}
+			characters[0].player->SetVelocity(speedo);
+			characters[0].moving = true;
+			characters[0].face_right = true;
 
 		}
 
-		if (App->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT || joystick_left)
+		if (App->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT)
 		{
 			b2Vec2 speedo;
-			speedo.x = -speed;
+			speedo.x = -characters[0].speed;
 			speedo.y = 0;
-			player->SetVelocity(speedo);
-			moving = true;
-			if (current_animation != &left)
-			{
-				left.Reset();
-				current_animation = &left;
-			}
+			characters[0].player->SetVelocity(speedo);
+			characters[0].moving = true;
+			characters[0].face_right = false;
+
 		}
 
-	
-
-
-
-
-	if ((App->input->GetKey(SDL_SCANCODE_D) == KEY_IDLE)
-		&& (App->input->GetKey(SDL_SCANCODE_A) == KEY_IDLE) && joystick_left == false && joystick_right == false)
-	{
-		current_animation = &idle;
-	}
-	if (App->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT
-		&& App->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT && joystick_left == false && joystick_right == false)
-	{
-		current_animation = &idle;
-	}
 
 	
 
 	//Move player
-		if (!moving)
+		if (!characters[0].moving)
 		{
 			b2Vec2 speedo;
 			speedo.x = 0;
 			speedo.y = 0;
-			player->SetVelocity(speedo);
+			characters[0].player->SetVelocity(speedo);
 	    }
 
-		player->TateQuieto();
+		characters[0].player->TateQuieto();
 	// Draw everything --------------------------------------
-
+		if (characters[0].sliding)
+		{
+			int x, y;
+			characters[0].player_sliding->GetPosition(x, y);
+			characters[0].real_position.x = x;
+			characters[0].real_position.y = y;
+		}
+		else
+		{
+			int x, y;
+			characters[0].player->GetPosition(x, y);
+			characters[0].real_position.x = x;
+			characters[0].real_position.y = y;
+		}
 	
-	App->render->Blit(sprites, position.x, position.y);
+	//App->render->Blit(sprites, position.x, position.y);
 //Draw HUD(lifes / powerups)---------------------------------
 
 
@@ -205,7 +186,7 @@ void j1Player::OnCollision(PhysBody* player, PhysBody* other)
 {
 	if (other->type == GROUND)
 	{
-		jumping = false;
+		characters[0].jumping = false;
     }
 }
 

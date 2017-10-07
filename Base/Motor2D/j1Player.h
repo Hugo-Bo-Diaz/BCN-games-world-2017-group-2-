@@ -8,6 +8,25 @@
 struct SDL_Texture;
 struct Collider;
 
+struct player_char
+{
+	SDL_Texture* graphics = nullptr;
+	SDL_Texture* sprites = nullptr;
+	Animation* current_animation = nullptr;
+	float jump_force;
+	float speed;
+
+
+	fPoint real_position;
+	PhysBody* player;
+	PhysBody* player_sliding;
+	bool jumping = true;
+	bool moving = false;
+	bool sliding = false;
+	bool face_right;
+};
+
+
 class j1Player : public j1Module
 {
 public:
@@ -32,47 +51,7 @@ public:
 
 public:
 
-	SDL_Texture* graphics = nullptr;
-	SDL_Texture* sprites = nullptr;
-	Animation* current_animation = nullptr;
-
-	bool jumping = true;
-	Animation idle;
-	Animation left;
-	Animation right;
-	Animation special_1;
-	Animation special_2;
-	Animation special_3;
-
-	fPoint position; // en desuso
-	PhysBody* player;
-
-	Collider* col;
-	bool destroyed = false;
-
-	bool moving = false;
-
-	float jump_force;
-
-	int font_score = -1;
-	uint audio_shot;
-
-	int score;
-	char scores[8];
-
-	int lifes = 3;
-
-	bool joystick_up;
-	bool joystick_down;
-	bool joystick_left;
-	bool joystick_right;
-
-	float joystick_angle;
-
-	bool death = false;
-
-	float speed;
-	int god_mode = 0;
+	player_char characters[2];
 };
 
 #endif
