@@ -109,10 +109,18 @@ bool j1Scene::Update(float dt)
 	if (App->input->GetKey(SDL_SCANCODE_O) == KEY_REPEAT) {
 		App->win->Res.y += (10 * (App->win->Res.y / App->win->Res.x));
 		App->win->Res.x += 10;
+		App->render->camera.y += (10 * (App->win->Res.y / App->win->Res.x));
+		App->render->camera.x += 10;
+		App->render->camera.h -= (10 * (App->win->Res.y / App->win->Res.x));
+		App->render->camera.w -= 10;
 	}
 	if (App->input->GetKey(SDL_SCANCODE_P) == KEY_REPEAT) {
 		App->win->Res.y -= (10 * (App->win->Res.y / App->win->Res.x));
 		App->win->Res.x -= 10;
+		App->render->camera.y -= (10 * (App->win->Res.y / App->win->Res.x));
+		App->render->camera.x -= 10;
+		App->render->camera.h += (10 * (App->win->Res.y / App->win->Res.x));
+		App->render->camera.w += 10;
 	}
 	
 	/*// Change Camera 

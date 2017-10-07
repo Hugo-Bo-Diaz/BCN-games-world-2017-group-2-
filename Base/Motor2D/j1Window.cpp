@@ -46,9 +46,11 @@ bool j1Window::Awake(const pugi::xml_node& config)
 
 		scale = config.child("scale").attribute("value").as_int();
 
-		Res.x = width;
-		Res.y = height;
+		Res.x = (width / (config.child("res_scale").attribute("value").as_uint() / 2.0f)) - 5000;
+		Res.y = (height / (config.child("res_scale").attribute("value").as_uint() / 2.0f)) - 5000;
 
+		Res.x += 5000;
+		Res.y += 5000;
 		if(config.child("fullscreen").attribute("value").as_bool())
 		{
 			flags |= SDL_WINDOW_FULLSCREEN;
