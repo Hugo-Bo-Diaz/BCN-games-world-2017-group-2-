@@ -13,11 +13,12 @@ struct player_char
 	SDL_Texture* graphics;
 	//SDL_Texture* sprites = nullptr;
 	Animation* current_animation = nullptr;
-	p2SString animation_to_blit="idle_happy";
+	p2SString animation_to_blit;
 	p2List<Animation*>	animations;
 	float jump_force;
 	float speed;
 
+	iPoint offset;
 	float render_scale;
 
 	fPoint real_position;

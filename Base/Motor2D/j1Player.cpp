@@ -27,6 +27,7 @@ bool j1Player::Awake(const pugi::xml_node& config)
 	bool ret = true;
 
 	Local_config = config;
+	 
 	
 	return ret;
 }
@@ -41,7 +42,9 @@ bool j1Player::Start()
 
 	pugi::xml_node node = App->sprites.child("sprites").child("player");
 	ret = LoadSprites(node);
-
+	characters[1].anchored = false;
+	characters[0].animation_to_blit.create("idle_happy");
+	characters[1].animation_to_blit.create("idle_happy");
 
 	return ret;
 }
@@ -67,15 +70,20 @@ bool j1Player::Update(float dt)
 
 	characters[1].moving = false;
 
-
+	
 	if (!characters[0].jumping)
 	{ 
 		if (App->input->GetKey(SDL_SCANCODE_W) == KEY_DOWN)
 		{
+			
 			Jump(character_controll);
 			characters[0].jumping = true;
+			
+			
 		}
 	}
+
+
 
 		if (App->input->GetKey(SDL_SCANCODE_B) == KEY_DOWN)
 		{
@@ -85,11 +93,11 @@ bool j1Player::Update(float dt)
 			{
 				if(!characters[0].jumping)
 				{ 
-				if(!characters[1].anchored)
-				AnchorStart();
-				else
-				AnchorEnd();
-				}
+				   if(!characters[1].anchored)
+				   AnchorStart();
+				   else
+				   AnchorEnd();
+				   }
 			}
 			
 
@@ -155,13 +163,8 @@ bool j1Player::Update(float dt)
 		}
 
 		
-		characters[0].current_animation = characters[0].FindAnimByName(characters[0].animation_to_blit);
-		App->render->Blit(characters[0].graphics, characters[0].real_position.x, characters[0].real_position.y, &characters[0].current_animation->frames[1]);
 
-		characters[1].current_animation = characters[1].FindAnimByName(characters[1].animation_to_blit);
-		App->render->Blit(characters[1].graphics, characters[1].real_position.x, characters[1].real_position.y, &characters[1].current_animation->frames[1]);
-
-		if (characters[1].player_anchor)
+		if (characters[1].anchored)
 		{
 			int x, y;
 			characters[1].player_anchor->GetPosition(x, y);
@@ -175,12 +178,42 @@ bool j1Player::Update(float dt)
 			characters[1].real_position.x = x;
 			characters[1].real_position.y = y;
 		}
-	
-	//App->render->Blit(sprites, position.x, position.y);
+		
+		for (uint i = 0; i < 1; i++)
+		{
+			if (characters[i].face_left)
+			{
+
+			}
+			else if ( characters[i].face_right)
+			{ 
+				characters[i].animation_to_blit = "running_happy";
+			}
+		}
+
+		if (characters[0].face_left) {
+			characters[0].current_animation = characters[0].FindAnimByName(characters[0].animation_to_blit);
+			App->render->FlipBlit(characters[0].graphics, characters[0].real_position.x - characters[0].offset.x, characters[0].real_position.y - characters[0].offset.y, &characters[0].current_animation->GetCurrentFrame(), characters[0].render_scale);
+		}
+		else
+		{
+			characters[0].current_animation = characters[0].FindAnimByName(characters[0].animation_to_blit);
+			App->render->Blit(characters[0].graphics, characters[0].real_position.x - characters[0].offset.x, characters[0].real_position.y - characters[0].offset.y, &characters[0].current_animation->GetCurrentFrame(), characters[0].render_scale);
+		}
+
+		if (characters[1].face_left) {
+			characters[1].current_animation = characters[1].FindAnimByName(characters[1].animation_to_blit);
+			App->render->FlipBlit(characters[1].graphics, characters[1].real_position.x - characters[1].offset.x, characters[1].real_position.y - characters[1].offset.y, &characters[1].current_animation->GetCurrentFrame(), characters[1].render_scale);
+		}
+		else {
+			characters[1].current_animation = characters[1].FindAnimByName(characters[1].animation_to_blit);
+			App->render->Blit(characters[1].graphics, characters[1].real_position.x - characters[1].offset.x, characters[1].real_position.y - characters[1].offset.y, &characters[1].current_animation->GetCurrentFrame(), characters[1].render_scale);
+		}
+		//App->render->Blit(sprites, position.x, position.y);
 
 //Draw HUD(lifes / powerups)---------------------------------
 
-
+		
 
 return true;
 
@@ -267,13 +300,17 @@ void j1Player::GoLeft(bool character)
 	{
 		characters[1].player->SetVelocity(speedo);
 		characters[1].moving = true;
-		characters[1].face_left = false;
+		characters[1].face_left = true;
+		characters[1].face_right = false;
+		characters[1].animation_to_blit = "running_happy";
 	}
 	else
 	{
 		characters[0].player->SetVelocity(speedo);
 		characters[0].moving = true;
-		characters[0].face_left = false;
+		characters[0].face_left = true;
+		characters[0].face_right = false;
+		characters[0].animation_to_blit = "running_happy";
 	}
 }
 
@@ -288,12 +325,17 @@ void j1Player::GoRight(bool character)
 		characters[1].player->SetVelocity(speedo);
 		characters[1].moving = true;
 		characters[1].face_right = true;
+		characters[1].face_left = false;
+		characters[1].animation_to_blit = "running_happy";
 	}
 	else
 	{
 		characters[0].player->SetVelocity(speedo);
 		characters[0].moving = true;
 		characters[0].face_right = true;
+		characters[0].face_left = false;
+		characters[0].animation_to_blit = "running_happy";
+
 	}
 }
 
@@ -307,12 +349,16 @@ void j1Player::StopMoving(bool character)
 		characters[1].player->SetVelocity(speedo);
 		characters[1].face_right = false;
 		characters[1].face_left = false;
+		characters[1].animation_to_blit = "idle_happy";
+
 	}
 	else
 	{
 		characters[0].player->SetVelocity(speedo);
 		characters[0].face_right = false;
 		characters[0].face_left = false;
+		characters[0].animation_to_blit = "idle_happy";
+
 	}
 }
 
@@ -388,6 +434,8 @@ bool j1Player::LoadProperties(const pugi::xml_node& property_node) {
 	pugi::xml_node char_node = property_node.child("char");
 
 	for (int i = 0; char_node.attribute("name").as_string() != ""; i++) {
+		characters[i].offset.x = char_node.child("offset").attribute("x").as_uint();
+		characters[i].offset.y = char_node.child("offset").attribute("y").as_uint();
 		characters[i].real_position.x = char_node.child("position").attribute("x").as_int();//READ HERE FROM XML
 		characters[i].real_position.y = char_node.child("position").attribute("y").as_int();//READ HERE FROM XML
 
@@ -405,8 +453,8 @@ bool j1Player::LoadProperties(const pugi::xml_node& property_node) {
 			characters[i].player_sliding->body->SetActive(false);
 		}
 		else {
-			characters[i].player = App->physic->CreateRectangle(characters[0].real_position.x + 40, characters[0].real_position.y, 30, 50, b2_dynamicBody, true, PLAYER);
-			characters[i].player_anchor = App->physic->CreateRectangle(100000, 10000, 30, 50, b2_staticBody, true, GROUND);
+			characters[i].player = App->physic->CreateRectangle(characters[0].real_position.x + 40, characters[0].real_position.y, char_node.child("coll_size").attribute("w").as_int(), char_node.child("coll_size").attribute("h").as_int(), b2_dynamicBody, true, PLAYER);
+			characters[i].player_anchor = App->physic->CreateRectangle(100000, 100000, char_node.child("coll_size").attribute("w").as_int(), char_node.child("coll_size").attribute("h").as_int(), b2_staticBody, true, GROUND);
 			characters[i].player_anchor->body->SetActive(false);
 		}
 		char_node = char_node.next_sibling("char");
