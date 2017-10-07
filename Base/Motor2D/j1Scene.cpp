@@ -182,5 +182,5 @@ void j1Scene::ResetLoad() {
 	App->player->characters[0].player->SetPosition(App->root_node.child("player").child("properties").child("char").child("position").attribute("x").as_int(), App->root_node.child("player").child("properties").child("char").child("position").attribute("y").as_int());
 	App->player->characters[1].player->SetPosition(App->root_node.child("player").child("properties").child("char").next_sibling("char").child("position").attribute("x").as_int(), App->root_node.child("player").child("properties").child("char").next_sibling("char").child("position").attribute("y").as_int() + 200);
 
-
+	App->player->happyness = App->player->maximum_happyness;
 }

@@ -47,8 +47,8 @@
   </audio>
 
   <player>
-    <properties>
-      <char name="Menat">
+    <properties max_hap="10" min_sep="500" >
+        <char name="Menat">
         <position x="660" y="2804"/>
         <coll_size w="80" h="100"/>
         <offset x="21" y="23"/>

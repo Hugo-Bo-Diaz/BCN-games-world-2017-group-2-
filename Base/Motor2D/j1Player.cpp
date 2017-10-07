@@ -9,8 +9,10 @@
 #include "j1Audio.h"
 #include "SDL/include/SDL_timer.h"
 #include "j1Physic.h"
+#include "j1Scene.h"
 
 #include<stdio.h>
+#include<math.h>
 
 j1Player::j1Player()
 {
@@ -39,6 +41,8 @@ bool j1Player::Start()
 	// Inicializar lo necesario del jugador, crear los personajes en el mapa
 
 	ret = LoadProperties(Local_config.child("properties"));
+
+
 
 	pugi::xml_node node = App->sprites.child("sprites").child("player");
 	ret = LoadSprites(node);
@@ -69,8 +73,9 @@ bool j1Player::Update(float dt)
 	characters[0].moving = false;
 
 	characters[1].moving = false;
-
 	
+	distance = sqrt(pow(characters[0].real_position.x - characters[1].real_position.x, 2) + pow(characters[0].real_position.y - characters[1].real_position.y, 2));
+
 	if (!characters[0].jumping)
 	{ 
 		if (App->input->GetKey(SDL_SCANCODE_W) == KEY_DOWN)
@@ -178,18 +183,8 @@ bool j1Player::Update(float dt)
 			characters[1].real_position.x = x;
 			characters[1].real_position.y = y;
 		}
-		
-		for (uint i = 0; i < 1; i++)
-		{
-			if (characters[i].face_left)
-			{
 
-			}
-			else if ( characters[i].face_right)
-			{ 
-				characters[i].animation_to_blit = "running_happy";
-			}
-		}
+		UpdtHappy();
 
 		if (characters[0].face_left) {
 			characters[0].current_animation = characters[0].FindAnimByName(characters[0].animation_to_blit);
@@ -211,13 +206,10 @@ bool j1Player::Update(float dt)
 		}
 		//App->render->Blit(sprites, position.x, position.y);
 
-//Draw HUD(lifes / powerups)---------------------------------
-
-		
-
 return true;
 
 }
+
 
 void j1Player::OnCollision(PhysBody* player, PhysBody* other)
 {
@@ -370,6 +362,12 @@ void j1Player::AnchorStart()
 	characters[1].player->SetActive(false);
 	characters[1].player->SetPosition(10000, 10000);
 	characters[1].player_anchor->SetPosition(METERS_TO_PIXELS(position_.x), METERS_TO_PIXELS(position_.y));
+	
+	int tx, ty;
+	characters[1].player->GetPosition(tx, ty);
+	characters[1].real_position.x = (float)tx;
+	characters[1].real_position.y = (float)ty;
+
 	characters[1].player_anchor->SetActive(true);
 	b2Vec2 velocity;
 		
@@ -387,6 +385,12 @@ void j1Player::AnchorEnd()
 	characters[1].player_anchor->SetActive(false);
 	characters[1].player_anchor->SetPosition(10000, 10000);
 	characters[1].player->SetPosition(METERS_TO_PIXELS(position_.x), METERS_TO_PIXELS(position_.y));
+	
+	int tx, ty;
+	characters[1].player->GetPosition(tx, ty);
+	characters[1].real_position.x = (float)tx;
+	characters[1].real_position.y = (float)ty;
+
 	characters[1].player->SetActive(true);
 	b2Vec2 velocity;
 	velocity.x = 0;
@@ -428,9 +432,69 @@ bool j1Player::LoadSprites(const pugi::xml_node& sprite_node) {
 	return ret;
 }
 
+void j1Player::UpdtHappy() {
+	// Happyness -> Value     /////    Happiness -> Type of face show (UI)
+	if (distance < minimum_distance)
+	{
+		if (!time_taken)
+		{
+			time_taker = SDL_GetTicks();
+			time_taken = true;
+		}
+
+		if ((SDL_GetTicks() - time_taker) > time_to_lower)
+		{
+			happyness++;
+
+			if (happyness >= maximum_happyness)
+			{
+				happyness = maximum_happyness;
+			}
+			time_taken = false;
+
+		}
+	}
+
+
+	if (distance > minimum_distance)
+	{
+		if (!time_taken)
+		{
+			time_taker = SDL_GetTicks();
+			time_taken = true;
+		}
+
+		if ((SDL_GetTicks() - time_taker) > time_to_lower)
+		{
+			happyness--;
+			if (happyness <= 0)
+			{
+				happyness = 0;
+			}
+			time_taken = false;
+
+		}
+	}
+
+	if ((happyness * 100) / maximum_happyness >= 66)
+		happiness = 0; 
+	else if ((happyness * 100) / maximum_happyness >= 33)
+		happiness = 1;
+	else if ((happyness * 100) / maximum_happyness < 33 && (happyness * 100) / maximum_happyness > 1)
+		happiness = 2;
+	else {
+		App->scene->ResetLoad();
+	}
+
+}
+
+
 bool j1Player::LoadProperties(const pugi::xml_node& property_node) {
 	
 	bool ret = true;
+	// Cargar cosas Happy
+	maximum_happyness = property_node.attribute("max_hap").as_int();
+	minimum_distance = property_node.attribute("min_sep").as_int();
 	pugi::xml_node char_node = property_node.child("char");
 
 	for (int i = 0; char_node.attribute("name").as_string() != ""; i++) {
