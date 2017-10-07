@@ -48,9 +48,20 @@ public:
 	bool Load(const pugi::xml_node& config);
 	bool Save(const pugi::xml_node& config);
 
+	void Jump(bool);
+
+	void SlideStart();
+
+	void SlideEnd();
+
+	void GoRight(bool);
+
+	void GoLeft(bool);
+
+	void StopMoving(bool);
 
 public:
-
+	bool character_controll = true; //true para el gordete, false para la flaquita
 	player_char characters[2];
 };
 
