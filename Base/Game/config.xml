@@ -69,11 +69,11 @@
        <position x="644" y="2454"/>
         <coll_size w="80" h="100"/>
         <render_scale value="0.75"/>
-        <offset x="30" y="30"/>
+        <offset x="25" y="30"/>
         <max_speed value= "300"/>
         <initial_force value= ""/>
         <jumpsquat value= ""/>
-        <jump_force value= "-1850"/>
+        <jump_force value= "-250"/>
         <friction value= ""/>
         <air_restriction value= ""/>
 
