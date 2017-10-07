@@ -109,6 +109,9 @@
     <Xml Include="..\Game\config.xml">
       <Filter>XMLs</Filter>
     </Xml>
+    <Xml Include="..\Game\sprites.xml">
+      <Filter>XMLs</Filter>
+    </Xml>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Modules">

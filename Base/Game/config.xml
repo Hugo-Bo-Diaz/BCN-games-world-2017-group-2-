@@ -48,14 +48,15 @@
 
   <player>
     <properties max_hap="10" min_sep="500" >
-      <char name="Borat">
+        <char name="Menat">
         <position x="660" y="2804"/>
-        <coll_size w="30" h="50"/>
-        <render_scale value="0.75"/>
+        <coll_size w="80" h="100"/>
+        <offset x="21" y="23"/>
+        <render_scale value="0.70"/>
         <max_speed value= "300"/>
         <initial_force value= ""/>
         <jumpsquat value= "3"/>
-        <jump_force value= "-250"/>
+        <jump_force value= "-1450"/>
         <friction value= ""/>
         <air_restriction value= ""/>
 
@@ -64,14 +65,15 @@
         <slam_velocity value= ""/>
         <anchor_time value= ""/>
       </char>
-     <char name="Menat">
-       <position x="644" y="2604"/>
-        <coll_size w="30" h="50"/>
-       
+     <char name="Borat">
+       <position x="644" y="2454"/>
+        <coll_size w="80" h="100"/>
+        <render_scale value="0.75"/>
+        <offset x="30" y="30"/>
         <max_speed value= "300"/>
         <initial_force value= ""/>
         <jumpsquat value= ""/>
-        <jump_force value= "-450"/>
+        <jump_force value= "-1850"/>
         <friction value= ""/>
         <air_restriction value= ""/>
 

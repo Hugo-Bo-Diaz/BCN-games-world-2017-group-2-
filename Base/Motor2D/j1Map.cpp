@@ -61,7 +61,7 @@ void j1Map::Draw()
 
 				for (int i = 0; i < item_layer->data->height; i++) {
 					for (int j = 0; j < item_layer->data->width; j++) {
-						App->render->Blit(
+						App->render->MapBlit(
 							item_tileset->data->image.tex,
 							j * item_map->data->tilewidth,
 							i * item_map->data->tileheight,

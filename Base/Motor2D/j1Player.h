@@ -13,10 +13,12 @@ struct player_char
 	SDL_Texture* graphics;
 	//SDL_Texture* sprites = nullptr;
 	Animation* current_animation = nullptr;
+	p2SString animation_to_blit;
 	p2List<Animation*>	animations;
 	float jump_force;
 	float speed;
 
+	iPoint offset;
 	float render_scale;
 
 	fPoint real_position;
@@ -27,7 +29,8 @@ struct player_char
 	bool moving = false;
 	bool sliding = false;
 	bool anchored = false;
-	bool face_right;
+	bool face_right = false;
+	bool face_left = false;
 
 	Animation* FindAnimByName(p2SString _name_) {
 		p2List_item<Animation*>* ret = animations.start;
