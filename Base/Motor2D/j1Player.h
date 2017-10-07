@@ -10,13 +10,14 @@ struct Collider;
 
 struct player_char
 {
-	SDL_Texture* graphics = nullptr;
+	SDL_Texture* graphics;
 	//SDL_Texture* sprites = nullptr;
 	Animation* current_animation = nullptr;
 	p2List<Animation*>	animations;
 	float jump_force;
 	float speed;
 
+	float render_scale;
 
 	fPoint real_position;
 	PhysBody* player;
@@ -28,7 +29,7 @@ struct player_char
 
 	Animation* FindAnimByName(p2SString _name_) {
 		p2List_item<Animation*>* ret = animations.start;
-		while (ret->data->name.GetString() != _name_.GetString()) {
+		while (ret->data->name != _name_) {
 			ret = ret->next;
 		}
 
@@ -63,6 +64,7 @@ public:
 public:
 
 	player_char characters[2];
+	pugi::xml_node Local_config;
 };
 
 #endif

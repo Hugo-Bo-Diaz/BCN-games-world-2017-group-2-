@@ -1,6 +1,6 @@
 <sprites>
   <player>
-    <sheet source= "sprites_man.png">
+    <sheet source= "textures/sprites_man.png">
       <animation name= "idle_happy" loop="true" speed="1">
         <image x="0" y="0" w="174" h="174"/>
         <image x="174" y="0" w="174" h="174"/>

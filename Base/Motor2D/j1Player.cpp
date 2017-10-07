@@ -25,12 +25,7 @@ j1Player::~j1Player()
 bool j1Player::Awake(const pugi::xml_node& config)
 {
 	bool ret = true;
-
-	ret = LoadProperties(config.child("properties"));
-
-	pugi::xml_node node = App->sprites.child("player");
-	ret = LoadSprites(node);
-
+	Local_config = config;
 	return ret;
 }
 // Load assets
@@ -39,6 +34,12 @@ bool j1Player::Start()
 	bool ret = true;
 
 	// Inicializar lo necesario del jugador, crear los personajes en el mapa
+
+	ret = LoadProperties(Local_config.child("properties"));
+
+	pugi::xml_node node = App->sprites.child("sprites").child("player");
+	ret = LoadSprites(node);
+
 
 	return ret;
 }
@@ -161,8 +162,9 @@ bool j1Player::Update(float dt)
 			characters[0].real_position.x = x;
 			characters[0].real_position.y = y;
 		}
-	
-	//App->render->Blit(sprites, position.x, position.y);
+		
+		Animation* test = characters[0].FindAnimByName("idle_happy");
+		App->render->Blit(characters[0].graphics, characters[0].real_position.x, characters[0].real_position.y, &test->frames[1]);
 //Draw HUD(lifes / powerups)---------------------------------
 
 
@@ -194,30 +196,32 @@ bool j1Player::Save(const pugi::xml_node& savegame) {
 bool j1Player::LoadSprites(const pugi::xml_node& sprite_node) {
 	bool ret = true;
 
-	pugi::xml_node anim = sprite_node.child("animation");
+	pugi::xml_node sheet = sprite_node.child("sheet");
 
-	for (int i = 0; sprite_node.attribute("source").as_string() != ""; i++) {
-		characters[i].graphics = App->tex->Load(sprite_node.attribute("source").as_string());
+	for (int i = 0; sheet.attribute("source").as_string() != ""; i++) {
+		p2SString source = sheet.attribute("source").as_string();
+		characters[i].graphics = App->tex->Load(source.GetString());
+		pugi::xml_node anima = sheet.child("animation");
 
-		while (anim.attribute("name").as_string() != "") {
-			Animation* anima = new Animation;
+		while (anima.attribute("name").as_string() != "") {
+			Animation* anim = new Animation;
 			
-			anima->name.create(anim.attribute("name").as_string());
-			anima->loop = anim.attribute("loop").as_bool();
-			anima->speed = anim.attribute("speed").as_float();
+			anim->name.create(anima.attribute("name").as_string());
+			anim->loop = anima.attribute("loop").as_bool();
+			anim->speed = anima.attribute("speed").as_float();
 			
-			pugi::xml_node image = anim.child("image");
+			pugi::xml_node image = anima.child("image");
 			for (int j = 0; image.attribute("w").as_int() != 0; j++) {
-				anima->frames[j].x = image.attribute("x").as_uint();
-				anima->frames[j].y = image.attribute("y").as_uint();
-				anima->frames[j].w = image.attribute("w").as_uint();
-				anima->frames[j].h = image.attribute("h").as_uint();
+				anim->frames[j].x = image.attribute("x").as_uint();
+				anim->frames[j].y = image.attribute("y").as_uint();
+				anim->frames[j].w = image.attribute("w").as_uint();
+				anim->frames[j].h = image.attribute("h").as_uint();
 				image = image.next_sibling("image");
 			}
-			characters[i].animations.add(anima);
-			anim = anim.next_sibling("animation");
+			characters[i].animations.add(anim);
+			anima = anima.next_sibling("animation");
 		}
-
+		sheet = sheet.next_sibling("sheet");
 		
 	}
 
@@ -232,6 +236,8 @@ bool j1Player::LoadProperties(const pugi::xml_node& property_node) {
 	for (int i = 0; char_node.attribute("name").as_string() != ""; i++) {
 		characters[i].real_position.x = char_node.child("position").attribute("x").as_int();//READ HERE FROM XML
 		characters[i].real_position.y = char_node.child("position").attribute("y").as_int();//READ HERE FROM XML
+
+		characters[i].render_scale = char_node.child("render_scale").attribute("value").as_float();
 
 		characters[i].player = App->physic->CreateRectangle(characters[i].real_position.x, characters[i].real_position.y, char_node.child("coll_size").attribute("w").as_int(), char_node.child("coll_size").attribute("h").as_int(), b2_dynamicBody, true, PLAYER);
 

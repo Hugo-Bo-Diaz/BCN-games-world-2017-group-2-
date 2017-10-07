@@ -30,8 +30,8 @@
   </window>
 
   <renderer>
-    <camera x="0" y="0"/>
-    <cam_settings min_sep="100" max_sep="700" scaling_step="2" />
+    <camera x="660" y="1604"/>
+    <cam_settings min_sep="500" max_sep="1700" scaling_step="2" />
   </renderer>
 
   <textures>
@@ -49,9 +49,9 @@
   <player>
     <properties>
       <char name="Borat">
-        <position x="30" y="0"/>
+        <position x="660" y="2804"/>
         <coll_size w="30" h="50"/>
-        
+        <render_scale value="0.75"/>
         <max_speed value= "300"/>
         <initial_force value= ""/>
         <jumpsquat value= "3"/>
@@ -65,13 +65,13 @@
         <anchor_time value= ""/>
       </char>
      <char name="Menat">
-       <position x="0" y="0"/>
+       <position x="644" y="2604"/>
         <coll_size w="30" h="50"/>
        
         <max_speed value= "300"/>
         <initial_force value= ""/>
         <jumpsquat value= ""/>
-        <jump_force value= "-250"/>
+        <jump_force value= "-450"/>
         <friction value= ""/>
         <air_restriction value= ""/>
 
@@ -85,9 +85,12 @@
   </player>
 
   <scenes>
-      <map source="TMX tests/Trial.tmx" draw="false"/>
+      <map source="TMX tests/Full_level.tmx" draw="true"/>
   </scenes>
-  
+
+  <map>
+    <scale value="2"/>
+  </map>
   <physics>
     <gravity x= "0" y="14"/>
     <wind_force value="-1.4"/>
