@@ -7,6 +7,7 @@
 class Animation
 {
 public:
+	p2SString name;
 	bool loop = true;
 	bool pingpong = false;
 	float speed = 1.0f;

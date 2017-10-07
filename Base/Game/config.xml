@@ -47,19 +47,41 @@
   </audio>
 
   <player>
-    <physics>
-      <max_speed value= "300"/>
-      <initial_force value= ""/>
-      <jumpsquat value= ""/>
-      <jump_force value= "-250"/>
-      <friction value= ""/>
-      <air_restriction value= ""/>
+    <properties>
+      <char name="Borat">
+        <position x="30" y="0"/>
+        <coll_size w="30" h="50"/>
+        
+        <max_speed value= "300"/>
+        <initial_force value= ""/>
+        <jumpsquat value= "3"/>
+        <jump_force value= "-250"/>
+        <friction value= ""/>
+        <air_restriction value= ""/>
 
-      <slide_force value= ""/>
-      <grab_velocity value= ""/>
-      <slam_velocity value= ""/>
-      <anchor_time value= ""/>
-    </physics>
+        <slide_force value= "true"/>
+        <grab_velocity value= ""/>
+        <slam_velocity value= ""/>
+        <anchor_time value= ""/>
+      </char>
+     <char name="Menat">
+       <position x="0" y="0"/>
+        <coll_size w="30" h="50"/>
+       
+        <max_speed value= "300"/>
+        <initial_force value= ""/>
+        <jumpsquat value= ""/>
+        <jump_force value= "-250"/>
+        <friction value= ""/>
+        <air_restriction value= ""/>
+
+        <slide_force value= ""/>
+        <grab_velocity value= ""/>
+        <slam_velocity value= ""/>
+        <anchor_time value= ""/>
+      </char>
+    </properties>
+  <sprites route="sprites.xml"/>
   </player>
 
   <scenes>

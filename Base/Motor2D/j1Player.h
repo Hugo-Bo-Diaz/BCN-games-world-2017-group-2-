@@ -11,8 +11,9 @@ struct Collider;
 struct player_char
 {
 	SDL_Texture* graphics = nullptr;
-	SDL_Texture* sprites = nullptr;
+	//SDL_Texture* sprites = nullptr;
 	Animation* current_animation = nullptr;
+	p2List<Animation*>	animations;
 	float jump_force;
 	float speed;
 
@@ -24,6 +25,15 @@ struct player_char
 	bool moving = false;
 	bool sliding = false;
 	bool face_right;
+
+	Animation* FindAnimByName(p2SString _name_) {
+		p2List_item<Animation*>* ret = animations.start;
+		while (ret->data->name.GetString() != _name_.GetString()) {
+			ret = ret->next;
+		}
+
+		return ret->data;
+	}
 };
 
 
@@ -48,7 +58,8 @@ public:
 	bool Load(const pugi::xml_node& config);
 	bool Save(const pugi::xml_node& config);
 
-
+	bool LoadSprites(const pugi::xml_node& sprite_node);
+	bool LoadProperties(const pugi::xml_node& property_node);
 public:
 
 	player_char characters[2];
