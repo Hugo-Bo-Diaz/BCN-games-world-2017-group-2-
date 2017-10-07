@@ -407,3 +407,4 @@ bool j1Player::LoadProperties(const pugi::xml_node& property_node) {
 	
 	return ret;
 }
+

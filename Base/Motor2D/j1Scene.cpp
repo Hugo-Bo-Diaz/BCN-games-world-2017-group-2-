@@ -8,6 +8,7 @@
 #include "j1Window.h"
 #include "j1Map.h"
 #include "j1Scene.h"
+#include "j1Player.h"
 
 
 j1Scene::j1Scene() : j1Module()
@@ -123,6 +124,8 @@ bool j1Scene::Update(float dt)
 		App->render->camera.w += 10;
 	}
 	
+	if (App->input->GetKey(SDL_SCANCODE_T) == KEY_DOWN)
+		ResetLoad();
 	/*// Change Camera 
 	if (App->input->GetKey(SDL_SCANCODE_O) == KEY_DOWN)
 		App->win->UpScale();
@@ -172,4 +175,12 @@ bool j1Scene::CleanUp()
 void j1Scene::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 {
 	LOG("COLLISION!");
+}
+
+void j1Scene::ResetLoad() {
+	
+	App->player->characters[0].player->SetPosition(App->root_node.child("player").child("properties").child("char").child("position").attribute("x").as_int(), App->root_node.child("player").child("properties").child("char").child("position").attribute("y").as_int());
+	App->player->characters[1].player->SetPosition(App->root_node.child("player").child("properties").child("char").next_sibling("char").child("position").attribute("x").as_int(), App->root_node.child("player").child("properties").child("char").next_sibling("char").child("position").attribute("y").as_int() + 200);
+
+
 }

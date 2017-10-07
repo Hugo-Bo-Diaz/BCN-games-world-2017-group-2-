@@ -36,6 +36,8 @@ public:
 
 	void OnCollision(PhysBody* bodyA, PhysBody* bodyB);
 
+	void ResetLoad();
+
 private:
 	SDL_Texture* img;
 

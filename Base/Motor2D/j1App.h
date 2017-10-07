@@ -120,7 +120,7 @@ private:
 	// TODO 1.2: Create two new variables from pugui namespace:
 	// a xml_document to store the while config file and
 	// a xml_node to read specific branches of the xml
-private:
+public:
 	pugi::xml_document	document;		//TODO 1.2.2 Doc
 	pugi::xml_node		root_node;		//TODO 1.2.3 Node
 	pugi::xml_node		app_config;		//TODO 1.2.4 To get access to jsut app specific config
