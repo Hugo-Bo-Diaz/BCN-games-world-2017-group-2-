@@ -11,6 +11,7 @@
 #include "j1Physic.h"
 
 #include<stdio.h>
+#include<math.h>
 
 j1Player::j1Player()
 {
@@ -38,6 +39,8 @@ bool j1Player::Start()
 	// Inicializar lo necesario del jugador, crear los personajes en el mapa
 
 	ret = LoadProperties(Local_config.child("properties"));
+
+
 
 	pugi::xml_node node = App->sprites.child("sprites").child("player");
 	ret = LoadSprites(node);
@@ -67,6 +70,9 @@ bool j1Player::Update(float dt)
 
 	characters[1].moving = false;
 
+
+	
+	distance = sqrt(pow(characters[0].real_position.x - characters[1].real_position.x, 2) + pow(characters[0].real_position.y - characters[1].real_position.y, 2));
 
 	if (!characters[0].jumping)
 	{ 
@@ -159,8 +165,72 @@ bool j1Player::Update(float dt)
 		App->render->Blit(characters[0].graphics, characters[0].real_position.x, characters[0].real_position.y, &test->frames[1]);
 */
 
+		if (distance < minimum_distance)
+		{
+			if(!time_taken)
+			{ 
+			time_taker = SDL_GetTicks();
+			time_taken = true;
+			}
 
-		if (characters[1].player_anchor)
+			if ((SDL_GetTicks() - time_taker) > time_to_lower)
+			{
+				happyness++;
+
+				if (happyness >= maximum_happyness)
+				{
+					happyness = maximum_happyness;
+				}
+				time_taken = false;
+
+			}
+		}
+
+
+		if (distance > minimum_distance)
+		{
+			if (!time_taken)
+			{
+				time_taker = SDL_GetTicks();
+				time_taken = true;
+			}
+
+			if ((SDL_GetTicks() - time_taker) > time_to_lower)
+			{
+				happyness--;
+				if (happyness <= 0)
+				{
+					happyness = 0;
+				}
+				time_taken = false;
+
+			}
+		}
+
+		if ((happyness * 100) / maximum_happyness >= 66)
+			happy = true;
+		else if ((happyness * 100) / maximum_happyness >= 33)
+			neutral = true;
+		else if ((happyness * 100) / maximum_happyness < 33 && (happyness * 100) / maximum_happyness > 1)
+			sad = true;
+
+		if (sad)
+		{
+			happy = false;
+			neutral = false;
+		}
+		else if (happy)
+		{
+			sad = false;
+			neutral = false;
+		}
+		else if (neutral)
+		{
+			sad = false;
+			happy = false;
+		}
+
+		if (!characters[1].player_anchor)
 		{
 			int x, y;
 			characters[1].player_anchor->GetPosition(x, y);
@@ -178,7 +248,10 @@ bool j1Player::Update(float dt)
 	//App->render->Blit(sprites, position.x, position.y);
 
 //Draw HUD(lifes / powerups)---------------------------------
-
+		if (happyness == 10)
+		{
+			LOG("");
+		}
 
 
 return true;

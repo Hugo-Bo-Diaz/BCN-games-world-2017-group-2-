@@ -85,6 +85,22 @@ public:
 
 public:
 	bool character_controll = true; //true para el gordete, false para la flaquita
+
+	
+	float time_to_lower = 1000;//NEW VARIABLE
+	float minimum_distance = 200;//NEW VARIABLE 
+	int maximum_happyness = 10; //NEW VARIABLE
+
+
+    int happyness = 0;//NEW VARIABLE
+	bool happy = true;
+	bool neutral = false;
+	bool sad = false;
+	bool restart = false;
+
+	float distance;
+	float time_taker;
+	bool time_taken = false;
 	player_char characters[2];
 	pugi::xml_node Local_config;
 };
