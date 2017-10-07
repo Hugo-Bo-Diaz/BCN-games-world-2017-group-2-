@@ -35,7 +35,8 @@ public:
 	void SetVelocity(b2Vec2);
 	void ApplyForce(b2Vec2);
 	void TateQuieto();
-
+	void SetActive(bool);
+	void SetPosition(int x, int y);
 	
 
 public:

@@ -302,6 +302,19 @@ void PhysBody::SetVelocity(b2Vec2 velocity_)
 	body->SetLinearVelocity(velocity);
 	
 }
+void PhysBody::SetActive(bool active)
+{
+	body->SetActive(active);
+
+}
+void PhysBody::SetPosition(int x, int y)
+{
+	b2Vec2 position;
+	position.x = PIXEL_TO_METERS(x);
+	position.y = PIXEL_TO_METERS(y);
+	body->SetTransform(position, 0);
+
+}
 void PhysBody::ApplyForce(b2Vec2 force)
 {
 	body->ApplyForceToCenter(force, true);
@@ -377,13 +390,13 @@ void j1Physics::EndContact(b2Contact* contact)
 	if (PhysBodyB->module_player != nullptr)
 	{
 		if (PhysBodyA->type == GROUND)
-			PhysBodyB->module_player->jumping = true;
+			PhysBodyB->module_player->characters[0].jumping = true;
 	}
 
 	if (PhysBodyA->module_player != nullptr)
 	{
 		if (PhysBodyB->type == GROUND)
-			PhysBodyA->module_player->jumping = true;
+			PhysBodyA->module_player->characters[0].jumping = true;
 	}
 	//LLamar al "OnCollision" de los módulos que contengan las diferentes strucs
 }
