@@ -39,6 +39,8 @@ bool j1Player::Awake(const pugi::xml_node& config)
 	characters[0].player_sliding->body->SetActive(false);
 
 	characters[1].player = App->physic->CreateRectangle(characters[0].real_position.x + 40, characters[0].real_position.y, 30, 50, b2_dynamicBody, true, PLAYER);
+	characters[1].player_anchor = App->physic->CreateRectangle(100000, 10000, 30, 50, b2_staticBody, true, GROUND);
+	characters[1].player_anchor->body->SetActive(false);
 
 
 
@@ -89,8 +91,15 @@ bool j1Player::Update(float dt)
 			SlideStart();
 			else
 			{
-
+				if(!characters[0].jumping)
+				{ 
+				if(!characters[1].anchored)
+				AnchorStart();
+				else
+				AnchorEnd();
+				}
 			}
+			
 
 			//Gordete anchor
 		}
@@ -101,7 +110,7 @@ bool j1Player::Update(float dt)
 				SlideEnd();
 			else
 			{
-
+				
 			}
 		}
 
@@ -151,6 +160,22 @@ bool j1Player::Update(float dt)
 			characters[0].player->GetPosition(x, y);
 			characters[0].real_position.x = x;
 			characters[0].real_position.y = y;
+		}
+
+
+		if (characters[1].player_anchor)
+		{
+			int x, y;
+			characters[1].player_anchor->GetPosition(x, y);
+			characters[1].real_position.x = x;
+			characters[1].real_position.y = y;
+		}
+		else
+		{
+			int x, y;
+			characters[1].player->GetPosition(x, y);
+			characters[1].real_position.x = x;
+			characters[1].real_position.y = y;
 		}
 	
 	//App->render->Blit(sprites, position.x, position.y);
@@ -284,3 +309,36 @@ void j1Player::StopMoving(bool character)
 	characters[0].player->SetVelocity(speedo);
 
 }
+
+void j1Player::AnchorStart()
+{
+	characters[1].anchored = true;
+	b2Vec2 position_;
+	position_ = characters[1].player->body->GetPosition();
+	characters[1].player->SetActive(false);
+	characters[1].player->SetPosition(10000, 10000);
+	characters[1].player_anchor->SetPosition(METERS_TO_PIXELS(position_.x), METERS_TO_PIXELS(position_.y));
+	characters[1].player_anchor->SetActive(true);
+	b2Vec2 velocity;
+		
+	velocity.x = 0;
+	velocity.y = 0;
+	characters[1].player_anchor->SetVelocity(velocity);
+	characters[0].jumping = false;
+}
+
+void j1Player::AnchorEnd()
+{
+	characters[1].anchored = false;
+	b2Vec2 position_;
+	position_ = characters[1].player_anchor->body->GetPosition();
+	characters[1].player_anchor->SetActive(false);
+	characters[1].player_anchor->SetPosition(10000, 10000);
+	characters[1].player->SetPosition(METERS_TO_PIXELS(position_.x), METERS_TO_PIXELS(position_.y));
+	characters[1].player->SetActive(true);
+	b2Vec2 velocity;
+	velocity.x = 0;
+	velocity.y = 0;
+	characters[1].player->SetVelocity(velocity);
+}
+
