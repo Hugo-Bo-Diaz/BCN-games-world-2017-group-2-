@@ -47,7 +47,7 @@
   </audio>
 
   <player>
-    <properties>
+    <properties max_hap="10" min_sep="500" >
       <char name="Borat">
         <position x="660" y="2804"/>
         <coll_size w="30" h="50"/>

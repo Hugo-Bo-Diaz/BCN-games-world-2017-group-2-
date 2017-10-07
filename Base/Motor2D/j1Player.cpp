@@ -166,46 +166,20 @@ bool j1Player::Update(float dt)
 		App->render->Blit(characters[0].graphics, characters[0].real_position.x, characters[0].real_position.y, &test->frames[1]);
 */
 
-		if (distance < minimum_distance)
+
+		if (!characters[1].player_anchor)
 		{
-			if(!time_taken)
-			{ 
-			time_taker = SDL_GetTicks();
-			time_taken = true;
-			}
-
-			if ((SDL_GetTicks() - time_taker) > time_to_lower)
-			{
-				happyness++;
-
-				if (happyness >= maximum_happyness)
-				{
-					happyness = maximum_happyness;
-				}
-				time_taken = false;
-
-			}
+			int x, y;
+			characters[1].player_anchor->GetPosition(x, y);
+			characters[1].real_position.x = x;
+			characters[1].real_position.y = y;
 		}
-
-
-		if (distance > minimum_distance)
+		else
 		{
-			if (!time_taken)
-			{
-				time_taker = SDL_GetTicks();
-				time_taken = true;
-			}
-
-			if ((SDL_GetTicks() - time_taker) > time_to_lower)
-			{
-				happyness--;
-				if (happyness <= 0)
-				{
-					happyness = 0;
-				}
-				time_taken = false;
-
-			}
+			int x, y;
+			characters[1].player->GetPosition(x, y);
+			characters[1].real_position.x = x;
+			characters[1].real_position.y = y;
 		}
 
 		UpdtHappy();
@@ -350,6 +324,12 @@ void j1Player::AnchorStart()
 	characters[1].player->SetActive(false);
 	characters[1].player->SetPosition(10000, 10000);
 	characters[1].player_anchor->SetPosition(METERS_TO_PIXELS(position_.x), METERS_TO_PIXELS(position_.y));
+	
+	int tx, ty;
+	characters[1].player->GetPosition(tx, ty);
+	characters[1].real_position.x = (float)tx;
+	characters[1].real_position.y = (float)ty;
+
 	characters[1].player_anchor->SetActive(true);
 	b2Vec2 velocity;
 		
@@ -367,6 +347,12 @@ void j1Player::AnchorEnd()
 	characters[1].player_anchor->SetActive(false);
 	characters[1].player_anchor->SetPosition(10000, 10000);
 	characters[1].player->SetPosition(METERS_TO_PIXELS(position_.x), METERS_TO_PIXELS(position_.y));
+	
+	int tx, ty;
+	characters[1].player->GetPosition(tx, ty);
+	characters[1].real_position.x = (float)tx;
+	characters[1].real_position.y = (float)ty;
+
 	characters[1].player->SetActive(true);
 	b2Vec2 velocity;
 	velocity.x = 0;
@@ -411,6 +397,48 @@ bool j1Player::LoadSprites(const pugi::xml_node& sprite_node) {
 
 void j1Player::UpdtHappy() {
 	// Happyness -> Value     /////    Happiness -> Type of face show (UI)
+	if (distance < minimum_distance)
+	{
+		if (!time_taken)
+		{
+			time_taker = SDL_GetTicks();
+			time_taken = true;
+		}
+
+		if ((SDL_GetTicks() - time_taker) > time_to_lower)
+		{
+			happyness++;
+
+			if (happyness >= maximum_happyness)
+			{
+				happyness = maximum_happyness;
+			}
+			time_taken = false;
+
+		}
+	}
+
+
+	if (distance > minimum_distance)
+	{
+		if (!time_taken)
+		{
+			time_taker = SDL_GetTicks();
+			time_taken = true;
+		}
+
+		if ((SDL_GetTicks() - time_taker) > time_to_lower)
+		{
+			happyness--;
+			if (happyness <= 0)
+			{
+				happyness = 0;
+			}
+			time_taken = false;
+
+		}
+	}
+
 	if ((happyness * 100) / maximum_happyness >= 66)
 		happiness = 0; 
 	else if ((happyness * 100) / maximum_happyness >= 33)
@@ -421,21 +449,6 @@ void j1Player::UpdtHappy() {
 		App->scene->ResetLoad();
 	}
 
-	if (!characters[1].player_anchor)
-	{
-		int x, y;
-		characters[1].player_anchor->GetPosition(x, y);
-		characters[1].real_position.x = x;
-		characters[1].real_position.y = y;
-	}
-	else
-	{
-		int x, y;
-		characters[1].player->GetPosition(x, y);
-		characters[1].real_position.x = x;
-		characters[1].real_position.y = y;
-	}
-
 }
 
 
@@ -443,6 +456,8 @@ bool j1Player::LoadProperties(const pugi::xml_node& property_node) {
 	
 	bool ret = true;
 	// Cargar cosas Happy
+	maximum_happyness = property_node.attribute("max_hap").as_int();
+	minimum_distance = property_node.attribute("min_sep").as_int();
 	pugi::xml_node char_node = property_node.child("char");
 
 	for (int i = 0; char_node.attribute("name").as_string() != ""; i++) {

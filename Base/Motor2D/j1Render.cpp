@@ -86,8 +86,8 @@ bool j1Render::PreUpdate()
 
 	
 
-	camera.x = -sida.x + 400;
-	camera.y = -sida.y + 700;
+	camera.x = -sida.x + 400 + (sida.x - algo.x)/2;
+	camera.y = -sida.y + 700 + (sida.y - algo.y) / 2;
 
 	//ret = SetCamDistance({ (float)(sida.x - algo.x), (float)(sida.y - algo.y) });
 	
