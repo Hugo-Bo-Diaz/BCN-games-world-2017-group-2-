@@ -82,6 +82,7 @@ bool j1Player::Update(float dt)
 		if (App->input->GetKey(SDL_SCANCODE_W) == KEY_DOWN)
 		{
 			Jump(character_controll);
+			characters[0].jumping = true;
 		}
 	}
 

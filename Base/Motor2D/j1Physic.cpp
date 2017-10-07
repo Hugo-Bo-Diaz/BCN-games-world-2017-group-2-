@@ -50,7 +50,7 @@ bool j1Physics::Awake(const pugi::xml_node& config)
 	CreateRectangle(x, y, config.child("test_platform").attribute("w").as_int(), config.child("test_platform").attribute("h").as_int(), b2_staticBody);
 	CreateRectangle(x + 1000, y, config.child("test_platform").attribute("w").as_int(), config.child("test_platform").attribute("h").as_int(), b2_staticBody);
 	CreateRectangle(x + 2000, y, config.child("test_platform").attribute("w").as_int(), config.child("test_platform").attribute("h").as_int(), b2_staticBody);
-
+	CreateRectangle(App->player->characters[0].real_position.x + 200, App->player->characters[0].real_position.y, 80, 80, b2_dynamicBody, true, GROUND);
 	return ret;
 }
 bool j1Physics::Start()
@@ -119,14 +119,12 @@ PhysBody* j1Physics::CreateRectangle(int x, int y, int width, int height, b2Body
 	fixture.friction = 0;
 	if (col_type == PLAYER)
 	{
-		fixture.filter.categoryBits = 0x0002;
-		fixture.filter.maskBits = 0x0004;
+		fixture.filter.groupIndex = -1;
 
 	}
 	if (col_type == GROUND)
 	{
-		fixture.filter.categoryBits = 0x0004;
-		fixture.filter.maskBits = 0x0002;
+		fixture.filter.groupIndex = 1;
 	}
 
 	b->CreateFixture(&fixture);
@@ -394,7 +392,7 @@ void j1Physics::BeginContact(b2Contact* contact)
 }
 void j1Physics::EndContact(b2Contact* contact)
 {
-	PhysBody* PhysBodyA = (PhysBody*)contact->GetFixtureA()->GetBody()->GetUserData();
+	/*PhysBody* PhysBodyA = (PhysBody*)contact->GetFixtureA()->GetBody()->GetUserData();
 
 	PhysBody* PhysBodyB = (PhysBody*)contact->GetFixtureB()->GetBody()->GetUserData();
 
@@ -408,7 +406,7 @@ void j1Physics::EndContact(b2Contact* contact)
 	{
 		if (PhysBodyB->type == GROUND)
 			PhysBodyA->module_player->characters[0].jumping = true;
-	}
+	}*/
 	//LLamar al "OnCollision" de los módulos que contengan las diferentes strucs
 }
 
