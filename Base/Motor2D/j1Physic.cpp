@@ -50,7 +50,7 @@ bool j1Physics::Awake(const pugi::xml_node& config)
 	CreateRectangle(x, y, config.child("test_platform").attribute("w").as_int(), config.child("test_platform").attribute("h").as_int(), b2_staticBody);
 	CreateRectangle(x + 1000, y, config.child("test_platform").attribute("w").as_int(), config.child("test_platform").attribute("h").as_int(), b2_staticBody);
 	CreateRectangle(x + 2000, y, config.child("test_platform").attribute("w").as_int(), config.child("test_platform").attribute("h").as_int(), b2_staticBody);
-	CreateRectangle(App->player->characters[0].real_position.x + 200, App->player->characters[0].real_position.y, 80, 80, b2_dynamicBody, true, GROUND);
+	CreateRectangle(640,2804, 80, 80, b2_dynamicBody, true, GROUND);
 	return ret;
 }
 bool j1Physics::Start()
