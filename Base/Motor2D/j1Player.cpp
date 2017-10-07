@@ -154,11 +154,12 @@ bool j1Player::Update(float dt)
 			characters[0].real_position.y = y;
 		}
 
-/*		
-		Animation* test = characters[0].FindAnimByName("idle_happy");
-		App->render->Blit(characters[0].graphics, characters[0].real_position.x, characters[0].real_position.y, &test->frames[1]);
-*/
+		
+		characters[0].current_animation = characters[0].FindAnimByName(characters[0].animation_to_blit);
+		App->render->Blit(characters[0].graphics, characters[0].real_position.x, characters[0].real_position.y, &characters[0].current_animation->frames[1]);
 
+		characters[1].current_animation = characters[1].FindAnimByName(characters[1].animation_to_blit);
+		App->render->Blit(characters[1].graphics, characters[1].real_position.x, characters[1].real_position.y, &characters[1].current_animation->frames[1]);
 
 		if (characters[1].player_anchor)
 		{
@@ -266,13 +267,13 @@ void j1Player::GoLeft(bool character)
 	{
 		characters[1].player->SetVelocity(speedo);
 		characters[1].moving = true;
-		characters[1].face_right = false;
+		characters[1].face_left = false;
 	}
 	else
 	{
 		characters[0].player->SetVelocity(speedo);
 		characters[0].moving = true;
-		characters[0].face_right = false;
+		characters[0].face_left = false;
 	}
 }
 
@@ -301,11 +302,18 @@ void j1Player::StopMoving(bool character)
 	b2Vec2 speedo;
 	speedo.x = 0;
 	speedo.y = 0;
-	if(character)
-	characters[1].player->SetVelocity(speedo);
+	if (character)
+	{
+		characters[1].player->SetVelocity(speedo);
+		characters[1].face_right = false;
+		characters[1].face_left = false;
+	}
 	else
-	characters[0].player->SetVelocity(speedo);
-
+	{
+		characters[0].player->SetVelocity(speedo);
+		characters[0].face_right = false;
+		characters[0].face_left = false;
+	}
 }
 
 void j1Player::AnchorStart()
@@ -369,7 +377,6 @@ bool j1Player::LoadSprites(const pugi::xml_node& sprite_node) {
 			anima = anima.next_sibling("animation");
 		}
 		sheet = sheet.next_sibling("sheet");
-		
 	}
 
 	return ret;
