@@ -22,9 +22,11 @@ struct player_char
 	fPoint real_position;
 	PhysBody* player;
 	PhysBody* player_sliding;
+	PhysBody* player_anchor;
 	bool jumping = true;
 	bool moving = false;
 	bool sliding = false;
+	bool anchored = false;
 	bool face_right;
 
 	Animation* FindAnimByName(p2SString _name_) {
@@ -59,10 +61,30 @@ public:
 	bool Load(const pugi::xml_node& config);
 	bool Save(const pugi::xml_node& config);
 
+
 	bool LoadSprites(const pugi::xml_node& sprite_node);
 	bool LoadProperties(const pugi::xml_node& property_node);
 public:
 
+	void Jump(bool);
+
+	void SlideStart();
+
+	void SlideEnd();
+
+	void GoRight(bool);
+
+	void GoLeft(bool);
+
+
+	void StopMoving(bool);
+
+	void AnchorStart();
+
+	void AnchorEnd();
+
+public:
+	bool character_controll = true; //true para el gordete, false para la flaquita
 	player_char characters[2];
 	pugi::xml_node Local_config;
 };

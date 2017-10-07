@@ -89,6 +89,7 @@ PhysBody* j1Physics::CreateCircle(int x, int y, int radius,b2BodyType body_type 
 	fixture.shape = &shape;
 	fixture.density = 1.0f;
 
+
 	b->CreateFixture(&fixture);
 
 	// TODO 4: add a pointer to PhysBody as UserData to the body
@@ -116,6 +117,17 @@ PhysBody* j1Physics::CreateRectangle(int x, int y, int width, int height, b2Body
 	fixture.shape = &box;
 	fixture.density = 1.0f;
 	fixture.friction = 0;
+	if (col_type == PLAYER)
+	{
+		fixture.filter.categoryBits = 0x0002;
+		fixture.filter.maskBits = 0x0004;
+
+	}
+	if (col_type == GROUND)
+	{
+		fixture.filter.categoryBits = 0x0004;
+		fixture.filter.maskBits = 0x0002;
+	}
 
 	b->CreateFixture(&fixture);
 
@@ -316,7 +328,6 @@ void PhysBody::SetPosition(int x, int y)
 	position.x = PIXEL_TO_METERS(x);
 	position.y = PIXEL_TO_METERS(y);
 	body->SetTransform(position, 0);
-
 }
 void PhysBody::ApplyForce(b2Vec2 force)
 {
