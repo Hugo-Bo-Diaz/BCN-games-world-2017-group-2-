@@ -10,6 +10,7 @@
 #include "SDL/include/SDL_timer.h"
 #include "j1Physic.h"
 #include "j1Scene.h"
+#include "j1Map.h"
 
 #include<stdio.h>
 #include<math.h>
@@ -71,7 +72,41 @@ bool j1Player::Update(float dt)
 
 	characters[1].moving = false;
 
+	if (characters[0].real_position.x > 120 * App->map->Maps.start->data->tilesets.start->data->tileheight && characters[0].real_position.x < 135 * App->map->Maps.start->data->tilesets.start->data->tileheight)
+	{
+		b2Vec2 wind;
 
+    	wind.x = 200;
+		wind.y = 0;
+		characters[0].player->ApplyForce(wind);
+	}
+
+	if (characters[1].real_position.x > 120 * App->map->Maps.start->data->tilesets.start->data->tileheight && characters[1].real_position.x < 135 * App->map->Maps.start->data->tilesets.start->data->tileheight)
+	{
+		b2Vec2 wind;
+
+		wind.x = 200;
+		wind.y = 0;
+		characters[1].player->ApplyForce(wind);
+	}
+
+	if (characters[0].real_position.x > 200 * App->map->Maps.start->data->tilesets.start->data->tileheight && characters[0].real_position.x < 220 * App->map->Maps.start->data->tilesets.start->data->tileheight)
+	{
+		b2Vec2 wind2;
+
+		wind2.x = 0;
+		wind2.y = 300;
+		characters[0].player->ApplyForce(wind2);
+	}
+
+	if (characters[1].real_position.x > 200 * App->map->Maps.start->data->tilesets.start->data->tileheight && characters[1].real_position.x < 220 * App->map->Maps.start->data->tilesets.start->data->tileheight)
+	{
+		b2Vec2 wind2;
+
+		wind2.x = 0;
+		wind2.y = 300;
+		characters[1].player->ApplyForce(wind2);
+	}
 	
 	distance = sqrt(pow(characters[0].real_position.x - characters[1].real_position.x, 2) + pow(characters[0].real_position.y - characters[1].real_position.y, 2));
 
