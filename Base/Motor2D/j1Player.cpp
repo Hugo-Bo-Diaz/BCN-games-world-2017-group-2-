@@ -27,24 +27,7 @@ bool j1Player::Awake(const pugi::xml_node& config)
 	bool ret = true;
 
 	Local_config = config;
-
-	characters[0].real_position.x = 30;//READ HERE FROM XML
-	characters[0].real_position.y = 0;//READ HERE FROM XML
-
-	characters[0].player = App->physic->CreateRectangle(characters[0].real_position.x, characters[0].real_position.y, 30, 50, b2_dynamicBody, true, PLAYER);
-
-	characters[0].jump_force = config.child("physics").child("jump_force").attribute("value").as_float();
-	characters[0].speed = config.child("physics").child("max_speed").attribute("value").as_float(); //cambiar con xml
-	// Cargar aqui los xmls de sprites y de posicion de personajes en el mapa
-	// Propiedades por xml...
-	LOG("Loading player");
-	characters[0].player_sliding = App->physic->CreateRectangle(1000, 1000, 30, 25, b2_dynamicBody, true, PLAYER);
-	characters[0].player_sliding->body->SetActive(false);
-
-	characters[1].player = App->physic->CreateRectangle(characters[0].real_position.x + 40, characters[0].real_position.y, 30, 50, b2_dynamicBody, true, PLAYER);
-	characters[1].player_anchor = App->physic->CreateRectangle(100000, 10000, 30, 50, b2_staticBody, true, GROUND);
-	characters[1].player_anchor->body->SetActive(false);
-
+	
 	return ret;
 }
 // Load assets
@@ -53,12 +36,12 @@ bool j1Player::Start()
 	bool ret = true;
 
 	// Inicializar lo necesario del jugador, crear los personajes en el mapa
-/*
+
 	ret = LoadProperties(Local_config.child("properties"));
 
 	pugi::xml_node node = App->sprites.child("sprites").child("player");
 	ret = LoadSprites(node);
-*/
+
 
 	return ret;
 }
@@ -71,6 +54,7 @@ bool j1Player::CleanUp()
 	
 	App->fonts->UnLoad(font_score);*/
 	App->tex->UnLoad(characters[0].graphics);
+	App->tex->UnLoad(characters[1].graphics);
 
 
 	return true;
@@ -411,6 +395,11 @@ bool j1Player::LoadProperties(const pugi::xml_node& property_node) {
 		if (char_node.child("slide_force").attribute("value").as_bool() == true) {
 			characters[i].player_sliding = App->physic->CreateRectangle(1000, 1000, 30, 25, b2_dynamicBody, true, PLAYER);
 			characters[i].player_sliding->body->SetActive(false);
+		}
+		else {
+			characters[i].player = App->physic->CreateRectangle(characters[0].real_position.x + 40, characters[0].real_position.y, 30, 50, b2_dynamicBody, true, PLAYER);
+			characters[i].player_anchor = App->physic->CreateRectangle(100000, 10000, 30, 50, b2_staticBody, true, GROUND);
+			characters[i].player_anchor->body->SetActive(false);
 		}
 		char_node = char_node.next_sibling("char");
 	}

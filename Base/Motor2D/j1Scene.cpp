@@ -46,7 +46,7 @@ bool j1Scene::Start()
 	//if (ret == true) ret = App->map->Load("TMX tests/Trial.tmx");
 	p2List_item<p2SString*>* item = maps_to_load.start;
 	while (ret == true && item != nullptr) {
-		App->map->Load(item->data->GetString());
+		ret = App->map->Load(item->data->GetString());
 		item = item->next;
 	}
 	//if (ret == true) ret = App->map->Load("Poner Direccion de Mapa aquí");

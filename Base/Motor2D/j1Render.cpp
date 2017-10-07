@@ -75,19 +75,22 @@ bool j1Render::PreUpdate()
 	SDL_RenderClear(renderer);
 
 	
-	camera.x = -App->player->characters[0].real_position.x + 500;
-  iPoint sida;
-  sida.x = App->player->characters[0].real_position.x;
-  sida.y = App->player->characters[0].real_position.y;
+	//camera.x = -App->player->characters[0].real_position.x + 500;
+	iPoint sida;
+	sida.x = App->player->characters[0].real_position.x;
+	sida.y = App->player->characters[0].real_position.y;
 
 	iPoint algo;
-  algo.x = App->player->characters[1].real_position.x;
-  algo.y = App->player->characters[1].real_position.y;
+	algo.x = App->player->characters[1].real_position.x;
+	algo.y = App->player->characters[1].real_position.y;
 
-	ret = SetCamDistance({ (float)(sida.x - algo.x), (float)(sida.y - algo.y) });
+	
 
-	camera.x = -App->player->characters[0].real_position.x + (App->player->characters[0].real_position.x - App->player->characters[1].real_position.x);
-	camera.y = -App->player->characters[0].real_position.y + (App->player->characters[0].real_position.y - App->player->characters[1].real_position.y) + 600;
+	camera.x = -sida.x + 400;
+	camera.y = -sida.y + 700;
+
+	//ret = SetCamDistance({ (float)(sida.x - algo.x), (float)(sida.y - algo.y) });
+	
 	return ret;
 }
 

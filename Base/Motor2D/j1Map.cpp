@@ -76,7 +76,6 @@ void j1Map::Draw()
 						CreateGround(*item_layer->data, *item_tileset->data, j, i);
 					}
 				}
-				
 			}
 
 		item_layer = item_layer->next;
@@ -189,21 +188,21 @@ bool j1Map::LoadMapData(const pugi::xml_node& map_node, Map_info& item_map) {
 
 	scale = map_node.attribute("scale").as_uint();
 	// Orientation
-	const pugi::char_t* cmp = map_node.attribute("orientation").as_string();
+	p2SString cmp = map_node.attribute("orientation").as_string();
 
-	if (strcmp(cmp, "orthogonal")) item_map.map_type = orthogonal;
-	if (strcmp(cmp, "isometric")) item_map.map_type = isometric;
-	if (strcmp(cmp, "staggered")) item_map.map_type = staggered;
-	if (strcmp(cmp, "hexagonal")) item_map.map_type = hexagonal;
+	if (cmp.GetString() == "orthogonal") item_map.map_type = orthogonal;
+	else if (cmp.GetString() == "isometric") item_map.map_type = isometric;
+	else if (cmp.GetString() == "staggered") item_map.map_type = staggered;
+	else if (cmp.GetString() == "hexagonal") item_map.map_type = hexagonal;
 	else item_map.map_type = unknown_;
 
 	// Renderorder
-	cmp = map_node.attribute("renderorder").as_string();
+	cmp.create(map_node.attribute("renderorder").as_string());
 
-	if (strcmp(cmp, "right-down")) item_map.renderorder = right_down;
-	if (strcmp(cmp, "right-up")) item_map.renderorder = right_up;
-	if (strcmp(cmp, "left-down")) item_map.renderorder = left_down;
-	if (strcmp(cmp, "left-up")) item_map.renderorder = left_up;
+	if (cmp.GetString() == "right-down") item_map.renderorder = right_down;
+	if (cmp.GetString() == "right-up") item_map.renderorder = right_up;
+	if (cmp.GetString() == "left-down") item_map.renderorder = left_down;
+	if (cmp.GetString() == "left-up") item_map.renderorder = left_up;
 	else item_map.renderorder = unknown;
 
 	item_map.width = map_node.attribute("width").as_uint();

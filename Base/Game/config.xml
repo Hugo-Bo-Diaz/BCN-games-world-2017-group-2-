@@ -31,7 +31,7 @@
 
   <renderer>
     <camera x="660" y="1604"/>
-    <cam_settings min_sep="500" max_sep="1700" scaling_step="2" />
+    <cam_settings min_sep="200" max_sep="1000" scaling_step="2" />
   </renderer>
 
   <textures>
@@ -75,7 +75,7 @@
         <friction value= ""/>
         <air_restriction value= ""/>
 
-        <slide_force value= ""/>
+        <slide_force value= "false"/>
         <grab_velocity value= ""/>
         <slam_velocity value= ""/>
         <anchor_time value= ""/>
