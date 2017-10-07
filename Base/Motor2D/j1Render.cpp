@@ -65,9 +65,9 @@ bool j1Render::PreUpdate()
 {
 	SDL_RenderClear(renderer);
 	iPoint sida;
-	App->player->player->GetPosition(sida.x, sida.y );
+	//App->player->player->GetPosition(sida.x, sida.y );
 	
-	camera.x = -sida.x + 500;
+	camera.x = -App->player->characters[0].real_position.x + 500;
 
 	return true;
 }
