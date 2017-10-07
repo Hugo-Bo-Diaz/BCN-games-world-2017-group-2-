@@ -6,6 +6,7 @@
 #include "p2Point.h"
 #include "j1Module.h"
 #include "j1Textures.h"
+#include "j1Physic.h"
 
 // TODO 3.Homework
 // Do layer printing
@@ -37,7 +38,9 @@ struct layer_info {
 	uint		height;	// Height in tiles of layer
 	uint		tilecount;
 
-	//DrawMode	draw_sth;
+	uint		draw_mode; //0 es defaut, 1 es debug, 2 es especial o algo
+
+	p2List<PhysBody*> layer_coll;
 
 	// Data storing Tiles system
 	uint*	data = nullptr;
@@ -52,6 +55,11 @@ struct layer_info {
 
 	~layer_info() {
 		delete[] data;
+
+		for (int i = 0; i < layer_coll.count(); i++) {
+			delete layer_coll[i];
+		}
+			
 	}
 };
 
@@ -129,8 +137,6 @@ enum renderorder {
 struct Map_info {
 	pugi::xml_document map_file;
 	
-	bool draw;
-
 	orientation	map_type;
 	uint		renderorder;
 	SDL_Color	bg_color;
@@ -196,13 +202,15 @@ private:
 	// TODO 4.3 Load Layers
 	bool LoadLayerData(const pugi::xml_node& layer_node, layer_info& item_layer);
 
-
+	void CreateGround(layer_info& item_layer, tileset_info& item_tileset, int y, int x);
 
 public:
 
 	// TODO 3.1: Add your struct for map info as public for now
 	p2List<Map_info*> Maps;
-
+	uint scale;
+	bool first_loop = true;
+	
 private:
 
 	//pugi::xml_document	map_file;

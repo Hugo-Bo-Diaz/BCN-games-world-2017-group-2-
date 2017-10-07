@@ -145,6 +145,7 @@ bool j1App::LoadConfig()
 	bool ret = true;
 
 	pugi::xml_parse_result result = document.load_file("config.xml");
+	result = sprites.load_file("sprites.xml");
 	//LOG("%b", result);
 
 	if (result == NULL){ //Check that it loaded

@@ -25,6 +25,9 @@ j1Player::~j1Player()
 bool j1Player::Awake(const pugi::xml_node& config)
 {
 	bool ret = true;
+
+	Local_config = config;
+
 	characters[0].real_position.x = 30;//READ HERE FROM XML
 	characters[0].real_position.y = 0;//READ HERE FROM XML
 
@@ -42,8 +45,6 @@ bool j1Player::Awake(const pugi::xml_node& config)
 	characters[1].player_anchor = App->physic->CreateRectangle(100000, 10000, 30, 50, b2_staticBody, true, GROUND);
 	characters[1].player_anchor->body->SetActive(false);
 
-
-
 	return ret;
 }
 // Load assets
@@ -52,6 +53,12 @@ bool j1Player::Start()
 	bool ret = true;
 
 	// Inicializar lo necesario del jugador, crear los personajes en el mapa
+/*
+	ret = LoadProperties(Local_config.child("properties"));
+
+	pugi::xml_node node = App->sprites.child("sprites").child("player");
+	ret = LoadSprites(node);
+*/
 
 	return ret;
 }
@@ -162,6 +169,11 @@ bool j1Player::Update(float dt)
 			characters[0].real_position.y = y;
 		}
 
+/*		
+		Animation* test = characters[0].FindAnimByName("idle_happy");
+		App->render->Blit(characters[0].graphics, characters[0].real_position.x, characters[0].real_position.y, &test->frames[1]);
+*/
+
 
 		if (characters[1].player_anchor)
 		{
@@ -179,6 +191,7 @@ bool j1Player::Update(float dt)
 		}
 	
 	//App->render->Blit(sprites, position.x, position.y);
+
 //Draw HUD(lifes / powerups)---------------------------------
 
 
@@ -342,3 +355,65 @@ void j1Player::AnchorEnd()
 	characters[1].player->SetVelocity(velocity);
 }
 
+bool j1Player::LoadSprites(const pugi::xml_node& sprite_node) {
+	bool ret = true;
+
+	pugi::xml_node sheet = sprite_node.child("sheet");
+
+	for (int i = 0; sheet.attribute("source").as_string() != ""; i++) {
+		p2SString source = sheet.attribute("source").as_string();
+		characters[i].graphics = App->tex->Load(source.GetString());
+		pugi::xml_node anima = sheet.child("animation");
+
+		while (anima.attribute("name").as_string() != "") {
+			Animation* anim = new Animation;
+			
+			anim->name.create(anima.attribute("name").as_string());
+			anim->loop = anima.attribute("loop").as_bool();
+			anim->speed = anima.attribute("speed").as_float();
+			
+			pugi::xml_node image = anima.child("image");
+			for (int j = 0; image.attribute("w").as_int() != 0; j++) {
+				anim->frames[j].x = image.attribute("x").as_uint();
+				anim->frames[j].y = image.attribute("y").as_uint();
+				anim->frames[j].w = image.attribute("w").as_uint();
+				anim->frames[j].h = image.attribute("h").as_uint();
+				image = image.next_sibling("image");
+			}
+			characters[i].animations.add(anim);
+			anima = anima.next_sibling("animation");
+		}
+		sheet = sheet.next_sibling("sheet");
+		
+	}
+
+	return ret;
+}
+
+bool j1Player::LoadProperties(const pugi::xml_node& property_node) {
+	
+	bool ret = true;
+	pugi::xml_node char_node = property_node.child("char");
+
+	for (int i = 0; char_node.attribute("name").as_string() != ""; i++) {
+		characters[i].real_position.x = char_node.child("position").attribute("x").as_int();//READ HERE FROM XML
+		characters[i].real_position.y = char_node.child("position").attribute("y").as_int();//READ HERE FROM XML
+
+		characters[i].render_scale = char_node.child("render_scale").attribute("value").as_float();
+
+		characters[i].player = App->physic->CreateRectangle(characters[i].real_position.x, characters[i].real_position.y, char_node.child("coll_size").attribute("w").as_int(), char_node.child("coll_size").attribute("h").as_int(), b2_dynamicBody, true, PLAYER);
+
+		characters[i].jump_force = char_node.child("jump_force").attribute("value").as_float();
+		characters[i].speed = char_node.child("max_speed").attribute("value").as_float(); //cambiar con xml
+																										// Cargar aqui los xmls de sprites y de posicion de personajes en el mapa
+																										// Propiedades por xml...
+		LOG("Loading player");
+		if (char_node.child("slide_force").attribute("value").as_bool() == true) {
+			characters[i].player_sliding = App->physic->CreateRectangle(1000, 1000, 30, 25, b2_dynamicBody, true, PLAYER);
+			characters[i].player_sliding->body->SetActive(false);
+		}
+		char_node = char_node.next_sibling("char");
+	}
+	
+	return ret;
+}

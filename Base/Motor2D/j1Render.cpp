@@ -86,6 +86,8 @@ bool j1Render::PreUpdate()
 
 	ret = SetCamDistance({ (float)(sida.x - algo.x), (float)(sida.y - algo.y) });
 
+	camera.x = -App->player->characters[0].real_position.x + (App->player->characters[0].real_position.x - App->player->characters[1].real_position.x);
+	camera.y = -App->player->characters[0].real_position.y + (App->player->characters[0].real_position.y - App->player->characters[1].real_position.y) + 600;
 	return ret;
 }
 
@@ -150,10 +152,10 @@ void j1Render::ResetViewPort()
 }
 
 // Blit to screen
-bool j1Render::Blit(SDL_Texture* texture, int x, int y, const SDL_Rect* section, double angle, float speed, int pivot_x, int pivot_y) const
+bool j1Render::Blit(SDL_Texture* texture, int x, int y, const SDL_Rect* section, float scale, double angle, float speed, int pivot_x, int pivot_y) const
 {
 	bool ret = true;
-	uint scale = App->win->GetScale();
+	//uint scale = App->win->GetScale();
 
 	SDL_Rect rect;
 	rect.x = (int)(camera.x * speed) + x * scale;

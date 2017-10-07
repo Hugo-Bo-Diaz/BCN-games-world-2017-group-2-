@@ -10,12 +10,14 @@ struct Collider;
 
 struct player_char
 {
-	SDL_Texture* graphics = nullptr;
-	SDL_Texture* sprites = nullptr;
+	SDL_Texture* graphics;
+	//SDL_Texture* sprites = nullptr;
 	Animation* current_animation = nullptr;
+	p2List<Animation*>	animations;
 	float jump_force;
 	float speed;
 
+	float render_scale;
 
 	fPoint real_position;
 	PhysBody* player;
@@ -26,6 +28,15 @@ struct player_char
 	bool sliding = false;
 	bool anchored = false;
 	bool face_right;
+
+	Animation* FindAnimByName(p2SString _name_) {
+		p2List_item<Animation*>* ret = animations.start;
+		while (ret->data->name != _name_) {
+			ret = ret->next;
+		}
+
+		return ret->data;
+	}
 };
 
 
@@ -50,6 +61,11 @@ public:
 	bool Load(const pugi::xml_node& config);
 	bool Save(const pugi::xml_node& config);
 
+
+	bool LoadSprites(const pugi::xml_node& sprite_node);
+	bool LoadProperties(const pugi::xml_node& property_node);
+public:
+
 	void Jump(bool);
 
 	void SlideStart();
@@ -60,6 +76,7 @@ public:
 
 	void GoLeft(bool);
 
+
 	void StopMoving(bool);
 
 	void AnchorStart();
@@ -69,6 +86,7 @@ public:
 public:
 	bool character_controll = true; //true para el gordete, false para la flaquita
 	player_char characters[2];
+	pugi::xml_node Local_config;
 };
 
 #endif

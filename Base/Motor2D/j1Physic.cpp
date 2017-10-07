@@ -131,7 +131,10 @@ PhysBody* j1Physics::CreateRectangle(int x, int y, int width, int height, b2Body
 
 	b->CreateFixture(&fixture);
 
-	PhysBody* pbody = new PhysBody();
+	PhysBody* pbody;
+	//delete pbody;
+	pbody = new PhysBody();
+	
 	pbody->body = b;
 	pbody->width = width * 0.5f;
 	pbody->height = height * 0.5f;
