@@ -9,8 +9,10 @@
 #include "j1Audio.h"
 #include "SDL/include/SDL_timer.h"
 #include "j1Physic.h"
+#include "j1Scene.h"
 
 #include<stdio.h>
+#include<math.h>
 
 j1Player::j1Player()
 {
@@ -38,6 +40,8 @@ bool j1Player::Start()
 	// Inicializar lo necesario del jugador, crear los personajes en el mapa
 
 	ret = LoadProperties(Local_config.child("properties"));
+
+
 
 	pugi::xml_node node = App->sprites.child("sprites").child("player");
 	ret = LoadSprites(node);
@@ -67,6 +71,9 @@ bool j1Player::Update(float dt)
 
 	characters[1].moving = false;
 
+
+	
+	distance = sqrt(pow(characters[0].real_position.x - characters[1].real_position.x, 2) + pow(characters[0].real_position.y - characters[1].real_position.y, 2));
 
 	if (!characters[0].jumping)
 	{ 
@@ -159,31 +166,58 @@ bool j1Player::Update(float dt)
 		App->render->Blit(characters[0].graphics, characters[0].real_position.x, characters[0].real_position.y, &test->frames[1]);
 */
 
+		if (distance < minimum_distance)
+		{
+			if(!time_taken)
+			{ 
+			time_taker = SDL_GetTicks();
+			time_taken = true;
+			}
 
-		if (characters[1].player_anchor)
-		{
-			int x, y;
-			characters[1].player_anchor->GetPosition(x, y);
-			characters[1].real_position.x = x;
-			characters[1].real_position.y = y;
+			if ((SDL_GetTicks() - time_taker) > time_to_lower)
+			{
+				happyness++;
+
+				if (happyness >= maximum_happyness)
+				{
+					happyness = maximum_happyness;
+				}
+				time_taken = false;
+
+			}
 		}
-		else
+
+
+		if (distance > minimum_distance)
 		{
-			int x, y;
-			characters[1].player->GetPosition(x, y);
-			characters[1].real_position.x = x;
-			characters[1].real_position.y = y;
+			if (!time_taken)
+			{
+				time_taker = SDL_GetTicks();
+				time_taken = true;
+			}
+
+			if ((SDL_GetTicks() - time_taker) > time_to_lower)
+			{
+				happyness--;
+				if (happyness <= 0)
+				{
+					happyness = 0;
+				}
+				time_taken = false;
+
+			}
 		}
-	
+
+		UpdtHappy();
 	//App->render->Blit(sprites, position.x, position.y);
 
 //Draw HUD(lifes / powerups)---------------------------------
 
 
-
 return true;
 
 }
+
 
 void j1Player::OnCollision(PhysBody* player, PhysBody* other)
 {
@@ -375,9 +409,40 @@ bool j1Player::LoadSprites(const pugi::xml_node& sprite_node) {
 	return ret;
 }
 
+void j1Player::UpdtHappy() {
+	// Happyness -> Value     /////    Happiness -> Type of face show (UI)
+	if ((happyness * 100) / maximum_happyness >= 66)
+		happiness = 0; 
+	else if ((happyness * 100) / maximum_happyness >= 33)
+		happiness = 1;
+	else if ((happyness * 100) / maximum_happyness < 33 && (happyness * 100) / maximum_happyness > 1)
+		happiness = 2;
+	else {
+		App->scene->ResetLoad();
+	}
+
+	if (!characters[1].player_anchor)
+	{
+		int x, y;
+		characters[1].player_anchor->GetPosition(x, y);
+		characters[1].real_position.x = x;
+		characters[1].real_position.y = y;
+	}
+	else
+	{
+		int x, y;
+		characters[1].player->GetPosition(x, y);
+		characters[1].real_position.x = x;
+		characters[1].real_position.y = y;
+	}
+
+}
+
+
 bool j1Player::LoadProperties(const pugi::xml_node& property_node) {
 	
 	bool ret = true;
+	// Cargar cosas Happy
 	pugi::xml_node char_node = property_node.child("char");
 
 	for (int i = 0; char_node.attribute("name").as_string() != ""; i++) {
