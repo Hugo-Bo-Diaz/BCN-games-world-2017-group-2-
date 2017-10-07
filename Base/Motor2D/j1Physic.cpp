@@ -8,6 +8,7 @@
 #include "j1Scene.h"
 #include "math.h"
 #include "j1Window.h"
+#include "j1Player.h"
 
 #ifdef _DEBUG
 #pragma comment( lib, "Box2D/libx86/Debug/Box2D.lib" )
@@ -40,16 +41,16 @@ bool j1Physics::Awake(const pugi::xml_node& config)
 
 	// big static circle as "ground" in the middle of the screen
 	int x = 0;
-	int y = 1000;
+	int y = 600;
 	int diameter = config.child("test_platform").attribute("h").as_int();
 
 
 	//CreateCircle(x, y, diameter * 0.5f, b2_staticBody);
 
-	CreateRectangle(x, y, diameter * 1.5, diameter / 4, b2_staticBody);
+	CreateRectangle(x, y, config.child("test_platform").attribute("w").as_int(), config.child("test_platform").attribute("h").as_int(), b2_staticBody);
 	CreateRectangle(x + 1000, y, config.child("test_platform").attribute("w").as_int(), config.child("test_platform").attribute("h").as_int(), b2_staticBody);
 	CreateRectangle(x + 2000, y, config.child("test_platform").attribute("w").as_int(), config.child("test_platform").attribute("h").as_int(), b2_staticBody);
-
+	CreateRectangle(640,2804, 80, 80, b2_dynamicBody, true, GROUND);
 	return ret;
 }
 bool j1Physics::Start()
@@ -88,6 +89,7 @@ PhysBody* j1Physics::CreateCircle(int x, int y, int radius,b2BodyType body_type 
 	fixture.shape = &shape;
 	fixture.density = 1.0f;
 
+
 	b->CreateFixture(&fixture);
 
 	// TODO 4: add a pointer to PhysBody as UserData to the body
@@ -96,12 +98,12 @@ PhysBody* j1Physics::CreateCircle(int x, int y, int radius,b2BodyType body_type 
 	
 	pbody->body = b;
 	pbody->width = pbody->height = radius;
-	pbody->module = App->scene;
+	pbody->module_player = App->player;
     b->SetUserData(pbody);
 	return pbody;
 }
 
-PhysBody* j1Physics::CreateRectangle(int x, int y, int width, int height, b2BodyType body_type)
+PhysBody* j1Physics::CreateRectangle(int x, int y, int width, int height, b2BodyType body_type, bool give_collision, Phys_type col_type)
 {
 	b2BodyDef body;
 	body.type = body_type;
@@ -115,14 +117,29 @@ PhysBody* j1Physics::CreateRectangle(int x, int y, int width, int height, b2Body
 	fixture.shape = &box;
 	fixture.density = 1.0f;
 	fixture.friction = 0;
+	if (col_type == PLAYER)
+	{
+		fixture.filter.groupIndex = -1;
+
+	}
+	if (col_type == GROUND)
+	{
+		fixture.filter.groupIndex = 1;
+	}
 
 	b->CreateFixture(&fixture);
 
-	PhysBody* pbody = new PhysBody();
+	PhysBody* pbody;
+	//delete pbody;
+	pbody = new PhysBody();
+	
 	pbody->body = b;
 	pbody->width = width * 0.5f;
 	pbody->height = height * 0.5f;
-	pbody->module = App->scene;
+	pbody->type = col_type;
+	if(give_collision)
+	pbody->module_player = App->player;
+	
 	b->SetUserData(pbody);
 
 	return pbody;
@@ -298,6 +315,18 @@ void PhysBody::SetVelocity(b2Vec2 velocity_)
 	body->SetLinearVelocity(velocity);
 	
 }
+void PhysBody::SetActive(bool active)
+{
+	body->SetActive(active);
+
+}
+void PhysBody::SetPosition(int x, int y)
+{
+	b2Vec2 position;
+	position.x = PIXEL_TO_METERS(x);
+	position.y = PIXEL_TO_METERS(y);
+	body->SetTransform(position, 0);
+}
 void PhysBody::ApplyForce(b2Vec2 force)
 {
 	body->ApplyForceToCenter(force, true);
@@ -354,16 +383,33 @@ void j1Physics::BeginContact(b2Contact* contact)
 
 	PhysBody* PhysBodyB = (PhysBody*)contact->GetFixtureB()->GetBody()->GetUserData();
 
-   if (PhysBodyB->module != nullptr)
+   if (PhysBodyB->module_player != nullptr)
 	{
-		PhysBodyB->module->OnCollision(PhysBodyB, PhysBodyA);
+		PhysBodyB->module_player->OnCollision(PhysBodyB, PhysBodyA);
+	}
+	if (PhysBodyA->module_player != nullptr)
+	{
+		PhysBodyA->module_player->OnCollision(PhysBodyA, PhysBodyB);
+	}
+	//LLamar al "OnCollision" de los módulos que contengan las diferentes strucs
+}
+void j1Physics::EndContact(b2Contact* contact)
+{
+	/*PhysBody* PhysBodyA = (PhysBody*)contact->GetFixtureA()->GetBody()->GetUserData();
+
+	PhysBody* PhysBodyB = (PhysBody*)contact->GetFixtureB()->GetBody()->GetUserData();
+
+	if (PhysBodyB->module_player != nullptr)
+	{
+		if (PhysBodyA->type == GROUND)
+			PhysBodyB->module_player->characters[0].jumping = true;
 	}
 
-
-	if (PhysBodyA->module != nullptr)
+	if (PhysBodyA->module_player != nullptr)
 	{
-		PhysBodyA->module->OnCollision(PhysBodyA, PhysBodyB);
-	}
+		if (PhysBodyB->type == GROUND)
+			PhysBodyA->module_player->characters[0].jumping = true;
+	}*/
 	//LLamar al "OnCollision" de los módulos que contengan las diferentes strucs
 }
 

@@ -27,6 +27,8 @@ bool j1Map::Awake(pugi::xml_node& config)
 
 	folder.create(config.child("folder").child_value());
 
+	scale = config.child("scale").attribute("value").as_uint();
+
 	return ret;
 }
 
@@ -41,10 +43,10 @@ void j1Map::Draw()
 	// TODO 4.5 Loop to draw all tilesets + Blit
 	// TODO 4.9 Complete draw function for layers and tiles
 	p2List_item<Map_info*>* item_map = Maps.start;
-
+	//scale = 2;
 	iPoint pos = { 0,0 };
 
-	while (item_map != nullptr && item_map->data->draw) { //Check there is a map
+	while (item_map != nullptr) { //Check there is a map
 		
 		p2List_item<tileset_info*>* item_tileset = item_map->data->tilesets.start; //Start tileset list
 	
@@ -54,16 +56,25 @@ void j1Map::Draw()
 			item_tileset = item_tileset->next; // This only works if layer only works over 1 tileset, if multiple tilesets in a layer, you have to do it before every blit?
 
 		while (item_layer != nullptr) { //Check there are layers
-			uint* p = item_layer->data->data; // reset data pointing to data[0]
+			if (item_layer->data->draw_mode != 1) {
+				uint* p = item_layer->data->data; // reset data pointing to data[0]
 
-			for (int i = 0; i < item_layer->data->height; i++) {
-				for (int j = 0; j < item_layer->data->width; j++) {
-					App->render->Blit(
-						item_tileset->data->image.tex, 
-						j * item_map->data->tilewidth, 
-						i * item_map->data->tileheight, 
-						&item_tileset->data->GetRect(*p));
-					p++;
+				for (int i = 0; i < item_layer->data->height; i++) {
+					for (int j = 0; j < item_layer->data->width; j++) {
+						App->render->Blit(
+							item_tileset->data->image.tex,
+							j * item_map->data->tilewidth,
+							i * item_map->data->tileheight,
+							&item_tileset->data->GetRect(*p), scale);
+						p++;
+					}
+				}
+			}
+			else if(first_loop == true){
+				for (int i = 0; i < item_layer->data->height; i++) {
+					for (int j = 0; j < item_layer->data->width; j++) {
+						CreateGround(*item_layer->data, *item_tileset->data, j, i);
+					}
 				}
 			}
 
@@ -71,7 +82,8 @@ void j1Map::Draw()
 		}
 	item_map = item_map->next;
 	}
-	
+	if(first_loop)
+		first_loop = false;
 }
 
 // Called before quitting
@@ -174,22 +186,23 @@ bool j1Map::Load(const char* file_name)
 bool j1Map::LoadMapData(const pugi::xml_node& map_node, Map_info& item_map) {
 	bool ret = true;
 
+	scale = map_node.attribute("scale").as_uint();
 	// Orientation
-	const pugi::char_t* cmp = map_node.attribute("orientation").as_string();
+	p2SString cmp = map_node.attribute("orientation").as_string();
 
-	if (strcmp(cmp, "orthogonal")) item_map.map_type = orthogonal;
-	if (strcmp(cmp, "isometric")) item_map.map_type = isometric;
-	if (strcmp(cmp, "staggered")) item_map.map_type = staggered;
-	if (strcmp(cmp, "hexagonal")) item_map.map_type = hexagonal;
+	if (cmp.GetString() == "orthogonal") item_map.map_type = orthogonal;
+	else if (cmp.GetString() == "isometric") item_map.map_type = isometric;
+	else if (cmp.GetString() == "staggered") item_map.map_type = staggered;
+	else if (cmp.GetString() == "hexagonal") item_map.map_type = hexagonal;
 	else item_map.map_type = unknown_;
 
 	// Renderorder
-	cmp = map_node.attribute("renderorder").as_string();
+	cmp.create(map_node.attribute("renderorder").as_string());
 
-	if (strcmp(cmp, "right-down")) item_map.renderorder = right_down;
-	if (strcmp(cmp, "right-up")) item_map.renderorder = right_up;
-	if (strcmp(cmp, "left-down")) item_map.renderorder = left_down;
-	if (strcmp(cmp, "left-up")) item_map.renderorder = left_up;
+	if (cmp.GetString() == "right-down") item_map.renderorder = right_down;
+	if (cmp.GetString() == "right-up") item_map.renderorder = right_up;
+	if (cmp.GetString() == "left-down") item_map.renderorder = left_down;
+	if (cmp.GetString() == "left-up") item_map.renderorder = left_up;
 	else item_map.renderorder = unknown;
 
 	item_map.width = map_node.attribute("width").as_uint();
@@ -197,40 +210,6 @@ bool j1Map::LoadMapData(const pugi::xml_node& map_node, Map_info& item_map) {
 	item_map.tilewidth = map_node.attribute("tilewidth").as_uint();
 	item_map.tileheight = map_node.attribute("tileheight").as_uint();
 	item_map.nextobjectid = map_node.attribute("nextobjectid").as_uint();
-
-	item_map.draw = map_node.attribute("draw").as_bool();
-	// Load Tilesets
-	/*
-	if (map_node->child("tileset").attribute("firstgid").as_uint() != 0) {
-	
-		pugi::xml_node tileset_node = map_node->child("tileset");
-
-		while (tileset_node.attribute("firstgid").as_int() > 0) {
-
-			tileset_info* item_tileset = new tileset_info;
-			LoadTilesetData(&tileset_node, item_tileset);
-			tileset_node = tileset_node.parent().next_sibling("tileset");
-			item_map->tilesets.add(item_tileset);
-		}
-
-		map_loaded = true;
-	}
-	else {
-		map_loaded = false;
-		LOG("There is no tileset!/n");
-	}
-
-	// Load Layers
-	if (map_loaded) {
-		pugi::xml_node layer_node = map_node->child("layer");
-
-		while (layer_node.attribute("name").as_string() != "") {
-			layer_info* item_layer = new layer_info;
-			LoadLayerData(&layer_node, item_layer);
-			layer_node = layer_node.next_sibling("layer");
-			item_map->layers.add(item_layer);
-		}
-	}*/
 
 	return ret;
 }
@@ -293,7 +272,7 @@ bool j1Map::LoadLayerData(const pugi::xml_node& layer_node, layer_info& item_lay
 	item_layer.width = layer_node.attribute("width").as_uint();
 	item_layer.height = layer_node.attribute("height").as_uint();
 
-	//item_layer->draw_sth = (DrawMode)layer_node->attribute("Draw Mode").as_int();
+	item_layer.draw_mode = layer_node.child("properties").child("property").attribute("value").as_uint();
 
 	//Load all tiles in layer data
 	pugi::xml_node tile_node = layer_node.child("data").child("tile");
@@ -318,4 +297,35 @@ bool j1Map::LoadLayerData(const pugi::xml_node& layer_node, layer_info& item_lay
 iPoint j1Map::MapToWorld(int x, int y) const {
 
 	return { 0,0 };
+}
+
+
+void j1Map::CreateGround(layer_info& item_layer, tileset_info& item_tileset, int x_, int y_) {
+
+	int i = y_ * item_layer.width + x_;
+
+	{
+		PhysBody* Bdy = new PhysBody();
+		int x, y, w, h;
+		switch (item_layer.data[i]) {
+
+		case 135:
+			x = ((x_ * item_tileset.tilewidth) + item_tileset.tilewidth / 2) * scale;
+			y = ((y_ * item_tileset.tileheight) + item_tileset.tileheight / 2) * scale;
+			w = item_tileset.tilewidth * scale;
+			h = item_tileset.tileheight * scale;
+			Bdy = App->physic->CreateRectangle(x, y, w, h, b2_staticBody, false, GROUND);
+			item_layer.layer_coll.add(Bdy);
+			return;
+
+		case 136:return;/*
+			x = (i - (item_layer.width * (i / item_layer.height))) * 16 * scale;
+			y = (i / item_layer.height) * 16 * scale;
+			w = 16 * scale;
+			h = 16 * scale;
+			Bdy = App->physic->CreateRectangle(x, y, w, h, b2_staticBody, false, GROUND);
+			item_layer.layer_coll.add(Bdy);
+			continue;*/
+		}
+	}
 }

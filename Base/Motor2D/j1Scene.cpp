@@ -46,7 +46,7 @@ bool j1Scene::Start()
 	//if (ret == true) ret = App->map->Load("TMX tests/Trial.tmx");
 	p2List_item<p2SString*>* item = maps_to_load.start;
 	while (ret == true && item != nullptr) {
-		App->map->Load(item->data->GetString());
+		ret = App->map->Load(item->data->GetString());
 		item = item->next;
 	}
 	//if (ret == true) ret = App->map->Load("Poner Direccion de Mapa aquí");
@@ -109,10 +109,18 @@ bool j1Scene::Update(float dt)
 	if (App->input->GetKey(SDL_SCANCODE_O) == KEY_REPEAT) {
 		App->win->Res.y += (10 * (App->win->Res.y / App->win->Res.x));
 		App->win->Res.x += 10;
+		App->render->camera.y += (10 * (App->win->Res.y / App->win->Res.x));
+		App->render->camera.x += 10;
+		App->render->camera.h -= (10 * (App->win->Res.y / App->win->Res.x));
+		App->render->camera.w -= 10;
 	}
 	if (App->input->GetKey(SDL_SCANCODE_P) == KEY_REPEAT) {
 		App->win->Res.y -= (10 * (App->win->Res.y / App->win->Res.x));
 		App->win->Res.x -= 10;
+		App->render->camera.y -= (10 * (App->win->Res.y / App->win->Res.x));
+		App->render->camera.x -= 10;
+		App->render->camera.h += (10 * (App->win->Res.y / App->win->Res.x));
+		App->render->camera.w += 10;
 	}
 	
 	/*// Change Camera 
@@ -128,7 +136,7 @@ bool j1Scene::Update(float dt)
 
 	// TODO 3.7: Set the window title like
 	// "Map:%dx%d Tiles:%dx%d Tilesets:%d"
-	p2List_item<Map_info*>* tmp_map = App->map->Maps.start;
+	//p2List_item<Map_info*>* tmp_map = App->map->Maps.start;
 	/*p2SString title("Maps:%d MapSize:%dx%d TileSize:%dx%d Tilesets:%d Layers:%d Tiles:%d",
 		App->map->Maps.count(),
 		tmp_map->data->width, tmp_map->data->height,

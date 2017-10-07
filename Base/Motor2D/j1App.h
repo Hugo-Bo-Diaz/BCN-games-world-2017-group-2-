@@ -108,6 +108,9 @@ public:
 	j1FadeToBlack*		fade;
 	j1Physics*          physic;
 
+	// sprites
+	pugi::xml_document	sprites;
+
 private:
 
 	p2List<j1Module*>	modules;

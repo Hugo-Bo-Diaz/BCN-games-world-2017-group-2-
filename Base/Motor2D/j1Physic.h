@@ -14,7 +14,13 @@
 #define PIXEL_TO_METERS(p)  ((float) METER_PER_PIXEL * p)
 
 class j1Scene;
+class j1Player;
 
+enum Phys_type
+{
+	PLAYER,
+	GROUND,
+};
 // Small class to return to other modules to track position and rotation of physics bodies
 class PhysBody
 {
@@ -29,7 +35,8 @@ public:
 	void SetVelocity(b2Vec2);
 	void ApplyForce(b2Vec2);
 	void TateQuieto();
-
+	void SetActive(bool);
+	void SetPosition(int x, int y);
 	
 
 public:
@@ -37,8 +44,9 @@ public:
 
 	int x, y;
 
+	Phys_type type;
 	b2Body* body;
-	j1Scene* module = nullptr;
+	j1Player* module_player = nullptr;
 	// TODO 6: Add a pointer to a module that might want to listen to a collision from this body
 };
 
@@ -58,11 +66,12 @@ public:
 	bool CleanUp();
 
 	PhysBody* CreateCircle(int x, int y, int radius, b2BodyType body_type);
-	PhysBody* CreateRectangle(int x, int y, int width, int height, b2BodyType body_type);
+	PhysBody* CreateRectangle(int x, int y, int width, int height, b2BodyType body_type, bool give_collision = false, Phys_type col_type = GROUND);
 	PhysBody* CreateRectangleSensor(int x, int y, int width, int height, b2BodyType body_type);
 	PhysBody* CreateChain(int x, int y, int* points, int size, b2BodyType body_type);
 
 	void BeginContact(b2Contact*);
+	void EndContact(b2Contact*);
 
 private:
 

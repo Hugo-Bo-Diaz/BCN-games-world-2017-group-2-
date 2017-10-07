@@ -8,6 +8,38 @@
 struct SDL_Texture;
 struct Collider;
 
+struct player_char
+{
+	SDL_Texture* graphics;
+	//SDL_Texture* sprites = nullptr;
+	Animation* current_animation = nullptr;
+	p2List<Animation*>	animations;
+	float jump_force;
+	float speed;
+
+	float render_scale;
+
+	fPoint real_position;
+	PhysBody* player;
+	PhysBody* player_sliding;
+	PhysBody* player_anchor;
+	bool jumping = true;
+	bool moving = false;
+	bool sliding = false;
+	bool anchored = false;
+	bool face_right;
+
+	Animation* FindAnimByName(p2SString _name_) {
+		p2List_item<Animation*>* ret = animations.start;
+		while (ret->data->name != _name_) {
+			ret = ret->next;
+		}
+
+		return ret->data;
+	}
+};
+
+
 class j1Player : public j1Module
 {
 public:
@@ -24,54 +56,37 @@ public:
 
 	bool Update(float dt);
 	bool CleanUp();
-	void OnCollision(Collider* c1, Collider* c2);
+	void OnCollision(PhysBody*, PhysBody*);
 
 	bool Load(const pugi::xml_node& config);
 	bool Save(const pugi::xml_node& config);
 
 
+	bool LoadSprites(const pugi::xml_node& sprite_node);
+	bool LoadProperties(const pugi::xml_node& property_node);
 public:
 
-	SDL_Texture* graphics = nullptr;
-	SDL_Texture* sprites = nullptr;
-	Animation* current_animation = nullptr;
+	void Jump(bool);
 
-	Animation idle;
-	Animation left;
-	Animation right;
-	Animation special_1;
-	Animation special_2;
-	Animation special_3;
+	void SlideStart();
 
-	fPoint position; // en desuso
-	PhysBody* player;
+	void SlideEnd();
 
-	Collider* col;
-	bool destroyed = false;
+	void GoRight(bool);
 
-	bool moving = false;
+	void GoLeft(bool);
 
-	float jump_force;
 
-	int font_score = -1;
-	uint audio_shot;
+	void StopMoving(bool);
 
-	int score;
-	char scores[8];
+	void AnchorStart();
 
-	int lifes = 3;
+	void AnchorEnd();
 
-	bool joystick_up;
-	bool joystick_down;
-	bool joystick_left;
-	bool joystick_right;
-
-	float joystick_angle;
-
-	bool death = false;
-
-	float speed;
-	int god_mode = 0;
+public:
+	bool character_controll = true; //true para el gordete, false para la flaquita
+	player_char characters[2];
+	pugi::xml_node Local_config;
 };
 
 #endif

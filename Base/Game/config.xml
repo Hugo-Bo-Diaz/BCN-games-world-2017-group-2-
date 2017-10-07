@@ -26,10 +26,12 @@
     <height value="768"/>
     <scale value="1"/>
     <name value="Game Dev 1 Config"/>
+    <res_scale value="2"/>
   </window>
 
   <renderer>
-    <camera x="0" y="0"/>
+    <camera x="660" y="1604"/>
+    <cam_settings min_sep="200" max_sep="1000" scaling_step="2" />
   </renderer>
 
   <textures>
@@ -45,29 +47,54 @@
   </audio>
 
   <player>
-    <physics>
-      <max_speed value= "2050"/>
-      <initial_force value= ""/>
-      <jumpsquat value= ""/>
-      <jump_force value= "-250"/>
-      <friction value= ""/>
-      <air_restriction value= ""/>
+    <properties>
+      <char name="Borat">
+        <position x="660" y="2804"/>
+        <coll_size w="30" h="50"/>
+        <render_scale value="0.75"/>
+        <max_speed value= "300"/>
+        <initial_force value= ""/>
+        <jumpsquat value= "3"/>
+        <jump_force value= "-250"/>
+        <friction value= ""/>
+        <air_restriction value= ""/>
 
-      <slide_force value= ""/>
-      <grab_velocity value= ""/>
-      <slam_velocity value= ""/>
-      <anchor_time value= ""/>
-    </physics>
+        <slide_force value= "true"/>
+        <grab_velocity value= ""/>
+        <slam_velocity value= ""/>
+        <anchor_time value= ""/>
+      </char>
+     <char name="Menat">
+       <position x="644" y="2604"/>
+        <coll_size w="30" h="50"/>
+       
+        <max_speed value= "300"/>
+        <initial_force value= ""/>
+        <jumpsquat value= ""/>
+        <jump_force value= "-450"/>
+        <friction value= ""/>
+        <air_restriction value= ""/>
+
+        <slide_force value= "false"/>
+        <grab_velocity value= ""/>
+        <slam_velocity value= ""/>
+        <anchor_time value= ""/>
+      </char>
+    </properties>
+  <sprites route="sprites.xml"/>
   </player>
 
   <scenes>
-      <map source="TMX tests/Trial.tmx" draw="false"/>
+      <map source="TMX tests/Full_level.tmx" draw="true"/>
   </scenes>
-  
+
+  <map>
+    <scale value="2"/>
+  </map>
   <physics>
     <gravity x= "0" y="14"/>
     <wind_force value="-1.4"/>
-    <test_platform w="10000" h="200"/>
+    <test_platform w="800" h="200"/>
     <set_airmovement mode="1"/>
   </physics>
 
